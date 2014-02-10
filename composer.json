@@ -1,0 +1,41 @@
+{
+    "name": "zfcampus/zf-apigility-documentation",
+    "description": "Apigility API documentation module",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "zf2",
+        "zend",
+        "module",
+        "apigiltiy",
+        "documentation"
+    ],
+    "homepage": "http://apigility.org/",
+    "support": {
+        "email": "apigility-users@zend.com",
+        "irc": "irc://irc.freenode.net/apigility",
+        "source": "https://github.com/zfcampus/zf-apigility-documentation",
+        "issues": "https://github.com/zfcampus/zf-apigility-documentation/issues"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "require": {
+        "php": ">=5.4.8",
+        "zendframework/zendframework": "~2.3-dev"
+    },
+    "require-dev": {
+        "phpunit/PHPUnit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "ZF\\Apigility\\Documentation": "src/",
+            "ZFTest\\Apigility\\Documentation": "test/"
+        },
+        "classmap": [
+            "Module.php"
+        ]
+    }
+}
