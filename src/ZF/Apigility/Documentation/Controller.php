@@ -20,9 +20,19 @@ class Controller extends AbstractActionController
 
     public function showAction()
     {
-        $api = $this->apiFactory->createApi('Test', 1);
-        $view = new JsonModel();
-        $view->setVariable('api', $api);
-        return $view;
+        $apiName = $this->params()->fromRoute('api');
+        $version = $this->params()->fromRoute('version');
+        $serviceName = $this->params()->fromRoute('service');
+
+        if ($serviceName) {
+            $service = 5;
+        } else {
+            $api = $this->apiFactory->createApi('Test', $version);
+            $view = new JsonModel();
+            $view->setVariable('api', $api);
+            return $view;
+        }
+
+
     }
 }

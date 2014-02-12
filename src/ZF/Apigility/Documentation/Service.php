@@ -6,18 +6,15 @@ class Service implements \JsonSerializable
 {
     protected $type;
     protected $name;
+    protected $description;
     protected $route;
 
     protected $contentNegotiator;
     protected $requestAcceptTypes;
     protected $requestContentTypes;
 
-    // Rest properties
-    protected $entityHttpMethods;
-    protected $collectionHttpMethods;
-
-    // Rpc properties
-    protected $httpMethods;
+    protected $operations;
+    protected $entityOperations;
 
     protected $fields = array();
 
@@ -55,6 +52,22 @@ class Service implements \JsonSerializable
     }
 
     /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
      * @param mixed $route
      */
     public function setRoute($route)
@@ -88,11 +101,11 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @param mixed $acceptWhitelist
+     * @param mixed $requestAcceptTypes
      */
-    public function setRequestAcceptTypes($acceptWhitelist)
+    public function setRequestAcceptTypes($requestAcceptTypes)
     {
-        $this->requestAcceptTypes = $acceptWhitelist;
+        $this->requestAcceptTypes = $requestAcceptTypes;
     }
 
     /**
@@ -104,11 +117,11 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @param mixed $contentTypeWhitelist
+     * @param mixed $requestContentTypes
      */
-    public function setRequestContentTypes($contentTypeWhitelist)
+    public function setRequestContentTypes($requestContentTypes)
     {
-        $this->requestContentTypes = $contentTypeWhitelist;
+        $this->requestContentTypes = $requestContentTypes;
     }
 
     /**
@@ -120,52 +133,38 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @param mixed $resourceHttpMethods
+     * @param mixed $operations
      */
-    public function setEntityHttpMethods($resourceHttpMethods)
+    public function setOperations($operations)
     {
-        $this->entityHttpMethods = $resourceHttpMethods;
+        $this->operations = $operations;
     }
 
     /**
      * @return mixed
      */
-    public function getEntityHttpMethods()
+    public function getOperations()
     {
-        return $this->entityHttpMethods;
+        return $this->operations;
     }
 
     /**
-     * @param mixed $collectionHttpMethods
+     * @param mixed $entityOperations
      */
-    public function setCollectionHttpMethods($collectionHttpMethods)
+    public function setEntityOperations($entityOperations)
     {
-        $this->collectionHttpMethods = $collectionHttpMethods;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCollectionHttpMethods()
-    {
-        return $this->collectionHttpMethods;
-    }
-
-    /**
-     * @param mixed $httpMethods
-     */
-    public function setHttpMethods($httpMethods)
-    {
-        $this->httpMethods = $httpMethods;
+        $this->entityOperations = $entityOperations;
     }
 
     /**
      * @return mixed
      */
-    public function getHttpMethods()
+    public function getEntityOperations()
     {
-        return $this->httpMethods;
+        return $this->entityOperations;
     }
+
+
 
     /**
      * @param mixed $fields
@@ -187,6 +186,7 @@ class Service implements \JsonSerializable
     {
         $output = array(
             'name' => $this->name,
+            'description' => $this->description,
             'type' => $this->type,
             'route' => $this->route,
             'request_accept_types' => $this->requestAcceptTypes,
@@ -195,11 +195,18 @@ class Service implements \JsonSerializable
             'fields' => $this->fields,
         );
 
-        if ($this->type == 'rest') {
-            $output['entity_http_methods'] = $this->entityHttpMethods;
-            $output['collection_http_methods'] = $this->collectionHttpMethods;
-        } else {
-            $output['http_methods'] = $this->httpMethods;
+        $operations = array();
+        foreach ($this->operations as $op) {
+            $operations[$op->getHttpMethod()] = $op->jsonSerialize();
+        }
+        $output['operations'] = $operations;
+
+        if ($this->entityOperations) {
+            $entityOperations = array();
+            foreach ($this->entityOperations as $op) {
+                $entityOperations[$op->getHttpMethod()] = $op->jsonSerialize();
+            }
+            $output['entity_operations'] = $entityOperations;
         }
 
         return $output;
