@@ -17,6 +17,9 @@ class ApiFactory
     {
         $this->moduleManager = $moduleManager;
         $this->config = $config;
+
+        //        $moduleConfigPath = $this->moduleUtils->getModuleConfigPath($module);
+        //        $docConfigPath = dirname($moduleConfigPath) . '/documentation.config.php';
     }
 
     public function createApiList()
@@ -43,16 +46,30 @@ class ApiFactory
         $api->setVersion($apiVersion);
         $api->setName($apiName);
 
-        foreach ($this->config['zf-rest'] as $restServiceName => $restService) {
+        $serviceConfigs = array();
+        if ($this->config['zf-rest']) {
+            $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rest']);
+        }
+        if ($this->config['zf-rpc']) {
+            $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rpc']);
+        }
+
+        foreach ($serviceConfigs as $restServiceName => $restService) {
             if (strpos($restServiceName, $apiName . '\\') === 0) {
                 $service = new Service();
-                $service->setType('rest');
-                $service->setName($restServiceName);
+
+                $service->setName($restService['service_name']);
                 $route = $this->config['router']['routes'][$restService['route_name']]['options']['route'];
                 $service->setRoute($route);
 
-                $service->setResourceHttpMethods($restService['resource_http_methods']);
-                $service->setCollectionHttpMethods($restService['collection_http_methods']);
+                if (isset($restService['entity_http_methods'])) {
+                    $service->setType('rest');
+                    $service->setEntityHttpMethods($restService['entity_http_methods']);
+                    $service->setCollectionHttpMethods($restService['collection_http_methods']);
+                } else {
+                    $service->setType('rpc');
+                    $service->setHttpMethods($restService['http_methods']);
+                }
 
                 if (isset($this->config['zf-content-validation'][$restServiceName]['input_filter'])) {
                     $validatorName = $this->config['zf-content-validation'][$restServiceName]['input_filter'];
@@ -62,11 +79,11 @@ class ApiFactory
                 }
 
                 if (isset($this->config['zf-content-negotiation']['accept_whitelist'][$restServiceName])) {
-                    $service->setAcceptWhitelist($this->config['zf-content-negotiation']['accept_whitelist'][$restServiceName]);
+                    $service->setRequestAcceptTypes($this->config['zf-content-negotiation']['accept_whitelist'][$restServiceName]);
                 }
 
                 if (isset($this->config['zf-content-negotiation']['content_type_whitelist'][$restServiceName])) {
-                    $service->setContentTypeWhitelist($this->config['zf-content-negotiation']['content_type_whitelist'][$restServiceName]);
+                    $service->setRequestContentTypes($this->config['zf-content-negotiation']['content_type_whitelist'][$restServiceName]);
                 }
 
                 $api->addService($service);

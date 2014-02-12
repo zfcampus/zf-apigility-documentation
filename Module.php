@@ -31,7 +31,7 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface
     {
         return array('factories' => array(
             'ZF\Apigility\Documentation\ApiFactory' => function ($services) {
-                    return new ApiFactory(/*$services->get('ZF\Configuration\ConfigResourceFactory')*/
+                    return new ApiFactory(
                         $services->get('Zend\ModuleManager\ModuleManager'),
                         $services->get('Config')
                     );

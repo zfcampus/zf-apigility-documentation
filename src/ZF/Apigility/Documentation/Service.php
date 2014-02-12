@@ -9,11 +9,15 @@ class Service implements \JsonSerializable
     protected $route;
 
     protected $contentNegotiator;
-    protected $acceptWhitelist;
-    protected $contentTypeWhitelist;
+    protected $requestAcceptTypes;
+    protected $requestContentTypes;
 
-    protected $resourceHttpMethods;
+    // Rest properties
+    protected $entityHttpMethods;
     protected $collectionHttpMethods;
+
+    // Rpc properties
+    protected $httpMethods;
 
     protected $fields = array();
 
@@ -86,49 +90,49 @@ class Service implements \JsonSerializable
     /**
      * @param mixed $acceptWhitelist
      */
-    public function setAcceptWhitelist($acceptWhitelist)
+    public function setRequestAcceptTypes($acceptWhitelist)
     {
-        $this->acceptWhitelist = $acceptWhitelist;
+        $this->requestAcceptTypes = $acceptWhitelist;
     }
 
     /**
      * @return mixed
      */
-    public function getAcceptWhitelist()
+    public function getRequestAcceptTypes()
     {
-        return $this->acceptWhitelist;
+        return $this->requestAcceptTypes;
     }
 
     /**
      * @param mixed $contentTypeWhitelist
      */
-    public function setContentTypeWhitelist($contentTypeWhitelist)
+    public function setRequestContentTypes($contentTypeWhitelist)
     {
-        $this->contentTypeWhitelist = $contentTypeWhitelist;
+        $this->requestContentTypes = $contentTypeWhitelist;
     }
 
     /**
      * @return mixed
      */
-    public function getContentTypeWhitelist()
+    public function getRequestContentTypes()
     {
-        return $this->contentTypeWhitelist;
+        return $this->requestContentTypes;
     }
 
     /**
      * @param mixed $resourceHttpMethods
      */
-    public function setResourceHttpMethods($resourceHttpMethods)
+    public function setEntityHttpMethods($resourceHttpMethods)
     {
-        $this->resourceHttpMethods = $resourceHttpMethods;
+        $this->entityHttpMethods = $resourceHttpMethods;
     }
 
     /**
      * @return mixed
      */
-    public function getResourceHttpMethods()
+    public function getEntityHttpMethods()
     {
-        return $this->resourceHttpMethods;
+        return $this->entityHttpMethods;
     }
 
     /**
@@ -147,7 +151,21 @@ class Service implements \JsonSerializable
         return $this->collectionHttpMethods;
     }
 
+    /**
+     * @param mixed $httpMethods
+     */
+    public function setHttpMethods($httpMethods)
+    {
+        $this->httpMethods = $httpMethods;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getHttpMethods()
+    {
+        return $this->httpMethods;
+    }
 
     /**
      * @param mixed $fields
@@ -167,15 +185,24 @@ class Service implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return array(
+        $output = array(
             'name' => $this->name,
+            'type' => $this->type,
             'route' => $this->route,
-            'resource_http_methods' => $this->resourceHttpMethods,
-            'collection_http_methods' => $this->collectionHttpMethods,
-            'accept_types' => $this->acceptWhitelist,
-            'content_types' => $this->contentTypeWhitelist,
+            'request_accept_types' => $this->requestAcceptTypes,
+            'request_content_types' => $this->requestContentTypes,
+            'response_content_types' => $this->requestAcceptTypes,
             'fields' => $this->fields,
         );
+
+        if ($this->type == 'rest') {
+            $output['entity_http_methods'] = $this->entityHttpMethods;
+            $output['collection_http_methods'] = $this->collectionHttpMethods;
+        } else {
+            $output['http_methods'] = $this->httpMethods;
+        }
+
+        return $output;
     }
 }
  
