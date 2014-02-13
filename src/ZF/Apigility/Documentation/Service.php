@@ -4,7 +4,6 @@ namespace ZF\Apigility\Documentation;
 
 class Service implements \JsonSerializable
 {
-    protected $type;
     protected $name;
     protected $description;
     protected $route;
@@ -17,23 +16,6 @@ class Service implements \JsonSerializable
     protected $entityOperations;
 
     protected $fields = array();
-
-
-    /**
-     * @param mixed $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
 
     /**
      * @param mixed $name
@@ -187,13 +169,17 @@ class Service implements \JsonSerializable
         $output = array(
             'name' => $this->name,
             'description' => $this->description,
-            'type' => $this->type,
             'route' => $this->route,
             'request_accept_types' => $this->requestAcceptTypes,
             'request_content_types' => $this->requestContentTypes,
             'response_content_types' => $this->requestAcceptTypes,
-            'fields' => $this->fields,
         );
+
+        $fields = array();
+        foreach ($this->fields as $field) {
+            $fields[$field->getName()] = $field->jsonSerialize();
+        }
+        $output['fields'] = $fields;
 
         $operations = array();
         foreach ($this->operations as $op) {

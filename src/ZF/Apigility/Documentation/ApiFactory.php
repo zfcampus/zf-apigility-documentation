@@ -66,8 +66,16 @@ class ApiFactory
 
         $serviceData = null;
 
+        $apiVersion = (int) $apiVersion;
+        if ($apiVersion == 0) {
+            $apiVersion = 1;
+        }
+
         foreach ($this->config['zf-rest'] as $serviceClassName => $restConfig) {
-            if (strpos($serviceClassName, $apiName . '\\') === 0 && $restConfig['service_name'] === $serviceName) {
+            if ((strpos($serviceClassName, $apiName . '\\') === 0)
+                && ($restConfig['service_name'] === $serviceName)
+                && (strstr($serviceClassName, '\\V' . $apiVersion . '\\') !== false)
+            ) {
                 $serviceData = $restConfig;
                 break;
             }
@@ -75,7 +83,10 @@ class ApiFactory
 
         if (!$serviceData) {
             foreach ($this->config['zf-rpc'] as $serviceClassName => $rpcConfig) {
-                if (strpos($serviceClassName, $apiName . '\\') === 0 && $rpcConfig['service_name'] === $serviceName) {
+                if ((strpos($serviceClassName, $apiName . '\\') === 0)
+                    && ($rpcConfig['service_name'] === $serviceName)
+                    && (strstr($serviceClassName, '\\V' . $apiVersion . '\\') !== false)
+                ) {
                     $serviceData = $rpcConfig;
                     break;
                 }
@@ -133,7 +144,12 @@ class ApiFactory
             $fields = array();
             if (isset($this->config['input_filters'][$validatorName])) {
                 foreach ($this->config['input_filters'][$validatorName] as $fieldData) {
-                    $fields[$fieldData['name']] = (isset($fieldData['description']) ? $fieldData['description'] : '');
+                    $fields[] = $field = new Field();
+                    $field->setName($fieldData['name']);
+                    if (isset($fieldData['description'])) {
+                        $field->setDescription($fieldData['description']);
+                    }
+                    $field->setRequired($fieldData['required']);
                 }
                 $service->setFields($fields);
             }

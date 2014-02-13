@@ -22,6 +22,24 @@ return array(
             'ZF\Apigility\Documentation\Controller' => 'ZF\Apigility\Documentation\ControllerFactory',
         )
     ),
+    'zf-content-negotiation' => array(
+        'controllers' => array(
+            'ZF\Apigility\Documentation\Controller' => 'Json',
+        ),
+        'accept_whitelist' => array(
+            'ZF\Apigility\Documentation\Controller' => array(
+                0 => 'application/vnd.apigility.documentation.v1+json',
+                1 => 'application/json',
+                2 => 'application/*+json',
+            ),
+        ),
+        'content_type_whitelist' => array(
+            'Test\\V1\\Rpc\\BizzBam\\Controller' => array(
+                0 => 'application/vnd.apigility.documentation.v1+json',
+                1 => 'application/json',
+            ),
+        )
+    )
     // 'view_manager' => array(
     //     'template_path_stack' => array(
     //         'zf-apigility-documentation' => __DIR__ . '/../view',

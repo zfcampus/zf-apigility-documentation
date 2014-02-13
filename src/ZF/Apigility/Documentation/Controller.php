@@ -7,7 +7,7 @@
 namespace ZF\Apigility\Documentation;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\JsonModel;
+use ZF\ContentNegotiation\JsonModel;
 
 class Controller extends AbstractActionController
 {
@@ -21,18 +21,20 @@ class Controller extends AbstractActionController
     public function showAction()
     {
         $apiName = $this->params()->fromRoute('api');
-        $version = $this->params()->fromRoute('version');
+        $apiVersion = $this->params()->fromRoute('version');
         $serviceName = $this->params()->fromRoute('service');
 
         if ($serviceName) {
-            $service = 5;
-        } else {
-            $api = $this->apiFactory->createApi('Test', $version);
-            $view = new JsonModel();
-            $view->setVariable('api', $api);
-            return $view;
+            $service = $this->apiFactory->createService($apiName, $apiVersion, $serviceName);
+            return new JsonModel($service);
         }
 
+        if ($apiName) {
+            $api = $this->apiFactory->createApi($apiName, $apiVersion);
+            return new JsonModel(array('api' => $api));
+        }
 
+        $apiList = $this->apiFactory->createApiList();
+        return new JsonModel(array('apis' => $apiList));
     }
 }
