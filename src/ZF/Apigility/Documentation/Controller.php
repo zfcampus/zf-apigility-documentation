@@ -31,10 +31,11 @@ class Controller extends AbstractActionController
 
         if ($apiName) {
             $api = $this->apiFactory->createApi($apiName, $apiVersion);
-            return new JsonModel(array('api' => $api));
+            return new JsonModel($api);
         }
 
         $apiList = $this->apiFactory->createApiList();
         return new JsonModel(array('apis' => $apiList));
     }
+
 }
