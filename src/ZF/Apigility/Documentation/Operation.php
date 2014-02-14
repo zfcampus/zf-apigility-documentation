@@ -6,9 +6,10 @@
 
 namespace ZF\Apigility\Documentation;
 
-use Zend\Stdlib\JsonSerializable;
+use ArrayIterator;
+use IteratorAggregate;
 
-class Operation implements JsonSerializable
+class Operation implements IteratorAggregate
 {
     /**
      * @var string
@@ -95,16 +96,28 @@ class Operation implements JsonSerializable
     }
 
     /**
-     * Implement JsonSerializable
+     * Cast object to array
      * 
      * @return array
      */
-    public function jsonSerialize()
+    public function toArray()
     {
         return array(
             'description' => $this->description,
             'request' => $this->requestDescription,
             'response' => $this->responseDescription,
         );
+    }
+
+    /**
+     * Implement IteratorAggregate
+     *
+     * Passes the return value of toArray() to an ArrayIterator instance
+     * 
+     * @return ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->toArray());
     }
 }

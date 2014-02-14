@@ -6,9 +6,10 @@
 
 namespace ZF\Apigility\Documentation;
 
-use Zend\Stdlib\JsonSerializable;
+use ArrayIterator;
+use IteratorAggregate;
 
-class Service implements JsonSerializable
+class Service implements IteratorAggregate
 {
     /**
      * @var string
@@ -201,11 +202,11 @@ class Service implements JsonSerializable
     }
 
     /**
-     * Implement JsonSerializable
+     * Cast object to array
      * 
      * @return array
      */
-    public function jsonSerialize()
+    public function toArray()
     {
         $output = array(
             'name' => $this->name,
@@ -218,24 +219,36 @@ class Service implements JsonSerializable
 
         $fields = array();
         foreach ($this->fields as $field) {
-            $fields[$field->getName()] = $field->jsonSerialize();
+            $fields[$field->getName()] = $field->toArray();
         }
         $output['fields'] = $fields;
 
         $operations = array();
         foreach ($this->operations as $op) {
-            $operations[$op->getHttpMethod()] = $op->jsonSerialize();
+            $operations[$op->getHttpMethod()] = $op->toArray();
         }
         $output['operations'] = $operations;
 
         if ($this->entityOperations) {
             $entityOperations = array();
             foreach ($this->entityOperations as $op) {
-                $entityOperations[$op->getHttpMethod()] = $op->jsonSerialize();
+                $entityOperations[$op->getHttpMethod()] = $op->toArray();
             }
             $output['entity_operations'] = $entityOperations;
         }
 
         return $output;
+    }
+
+    /**
+     * Implement IteratorAggregate
+     *
+     * Passes the return value of toArray() to an ArrayIterator instance
+     * 
+     * @return ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->toArray());
     }
 }
