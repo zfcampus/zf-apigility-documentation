@@ -203,7 +203,7 @@ class Service implements IteratorAggregate
 
     /**
      * Cast object to array
-     * 
+     *
      * @return array
      */
     public function toArray()
@@ -244,7 +244,7 @@ class Service implements IteratorAggregate
      * Implement IteratorAggregate
      *
      * Passes the return value of toArray() to an ArrayIterator instance
-     * 
+     *
      * @return ArrayIterator
      */
     public function getIterator()

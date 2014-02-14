@@ -80,7 +80,7 @@ class Api implements IteratorAggregate
     }
 
     /**
-     * @param Service $service 
+     * @param Service $service
      */
     public function addService(Service $service)
     {
@@ -112,7 +112,7 @@ class Api implements IteratorAggregate
      * Implement IteratorAggregate
      *
      * Passes the return value of toArray() to an ArrayIterator instance
-     * 
+     *
      * @return ArrayIterator
      */
     public function getIterator()

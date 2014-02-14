@@ -37,9 +37,9 @@ class ApiFactory
     protected $docs = array();
 
     /**
-     * @param ModuleManager $moduleManager 
-     * @param array $config 
-     * @param ConfigModuleUtils $configModuleUtils 
+     * @param ModuleManager $moduleManager
+     * @param array $config
+     * @param ConfigModuleUtils $configModuleUtils
      */
     public function __construct(ModuleManager $moduleManager, $config, ConfigModuleUtils $configModuleUtils)
     {
@@ -50,7 +50,7 @@ class ApiFactory
 
     /**
      * Create list of available API modules
-     * 
+     *
      * @return array
      */
     public function createApiList()
@@ -67,9 +67,9 @@ class ApiFactory
 
     /**
      * Create documentation details for a given API module and version
-     * 
-     * @param string $apiName 
-     * @param int|string $apiVersion 
+     *
+     * @param string $apiName
+     * @param int|string $apiVersion
      * @return Api
      */
     public function createApi($apiName, $apiVersion)
@@ -98,12 +98,12 @@ class ApiFactory
     }
 
     /**
-     * Create documentation details for a given service in a given version of 
+     * Create documentation details for a given service in a given version of
      * an API module
-     * 
-     * @param string $apiName 
-     * @param int|string $apiVersion 
-     * @param string $serviceName 
+     *
+     * @param string $apiName
+     * @param int|string $apiVersion
+     * @param string $serviceName
      * @return Service
      */
     public function createService($apiName, $apiVersion, $serviceName)
@@ -154,7 +154,7 @@ class ApiFactory
         $service->setRoute(str_replace('[/v:version]', '', $route)); // remove intenral version prefix, hacky
 
         $baseOperationData = (isset($serviceData['collection_http_methods']))
-            ? $serviceData['collection_http_methods'] 
+            ? $serviceData['collection_http_methods']
             : $serviceData['http_methods'];
 
         $ops = array();
@@ -214,8 +214,8 @@ class ApiFactory
 
     /**
      * Retrieve the documentation for a given API module
-     * 
-     * @param string $apiName 
+     *
+     * @param string $apiName
      * @return array
      */
     protected function getDocumentationConfig($apiName)

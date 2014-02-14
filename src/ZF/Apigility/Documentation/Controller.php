@@ -17,7 +17,7 @@ class Controller extends AbstractActionController
     protected $apiFactory;
 
     /**
-     * @param ApiFactory $apiFactory 
+     * @param ApiFactory $apiFactory
      */
     public function __construct(ApiFactory $apiFactory)
     {
@@ -27,9 +27,9 @@ class Controller extends AbstractActionController
     /**
      * Show/return documentation
      *
-     * Returns a ContentNegotiation view model to allow for multiple 
+     * Returns a ContentNegotiation view model to allow for multiple
      * representations of documentation.
-     * 
+     *
      * @return ViewModel
      */
     public function showAction()
