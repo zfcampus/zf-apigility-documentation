@@ -1,11 +1,12 @@
 <?php
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
 namespace ZF\Apigility\Documentation;
 
+use InvalidArgumentException;
 use Zend\ModuleManager\ModuleManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZF\Apigility\ApigilityModuleInterface;
@@ -15,11 +16,31 @@ use ZF\Configuration\ModuleUtils as ConfigModuleUtils;
 
 class ApiFactory
 {
+    /**
+     * @var ModuleManager
+     */
     protected $moduleManager;
+
+    /**
+     * @var array
+     */
     protected $config;
+
+    /**
+     * @var ConfigModuleUtils
+     */
     protected $configModuleUtils;
+
+    /**
+     * @var array
+     */
     protected $docs = array();
 
+    /**
+     * @param ModuleManager $moduleManager
+     * @param array $config
+     * @param ConfigModuleUtils $configModuleUtils
+     */
     public function __construct(ModuleManager $moduleManager, $config, ConfigModuleUtils $configModuleUtils)
     {
         $this->moduleManager = $moduleManager;
@@ -27,6 +48,11 @@ class ApiFactory
         $this->configModuleUtils = $configModuleUtils;
     }
 
+    /**
+     * Create list of available API modules
+     *
+     * @return array
+     */
     public function createApiList()
     {
         $apigilityModules = array();
@@ -39,6 +65,13 @@ class ApiFactory
         return $apigilityModules;
     }
 
+    /**
+     * Create documentation details for a given API module and version
+     *
+     * @param string $apiName
+     * @param int|string $apiVersion
+     * @return Api
+     */
     public function createApi($apiName, $apiVersion)
     {
         $api = new Api;
@@ -64,6 +97,15 @@ class ApiFactory
         return $api;
     }
 
+    /**
+     * Create documentation details for a given service in a given version of
+     * an API module
+     *
+     * @param string $apiName
+     * @param int|string $apiVersion
+     * @param string $serviceName
+     * @return Service
+     */
     public function createService($apiName, $apiVersion, $serviceName)
     {
         $service = new Service();
@@ -98,7 +140,7 @@ class ApiFactory
         }
 
         if (!$serviceData || !isset($serviceClassName)) {
-            throw new \InvalidArgumentException('A service by that name could not be found');
+            throw new InvalidArgumentException('A service by that name could not be found');
         }
 
         $docsArray = $this->getDocumentationConfig($apiName);
@@ -112,7 +154,8 @@ class ApiFactory
         $service->setRoute(str_replace('[/v:version]', '', $route)); // remove intenral version prefix, hacky
 
         $baseOperationData = (isset($serviceData['collection_http_methods']))
-            ? $serviceData['collection_http_methods'] : $serviceData['http_methods'];
+            ? $serviceData['collection_http_methods']
+            : $serviceData['http_methods'];
 
         $ops = array();
         foreach ($baseOperationData as $httpMethod) {
@@ -142,7 +185,6 @@ class ApiFactory
             $service->setEntityOperations($ops);
         }
 
-
         if (isset($this->config['zf-content-validation'][$serviceClassName]['input_filter'])) {
             $validatorName = $this->config['zf-content-validation'][$serviceClassName]['input_filter'];
             $fields = array();
@@ -170,14 +212,21 @@ class ApiFactory
         return $service;
     }
 
+    /**
+     * Retrieve the documentation for a given API module
+     *
+     * @param string $apiName
+     * @return array
+     */
     protected function getDocumentationConfig($apiName)
     {
-        if (!isset($this->docs[$apiName])) {
-            $moduleConfigPath = $this->configModuleUtils->getModuleConfigPath($apiName);
-            $docConfigPath = dirname($moduleConfigPath) . '/documentation.config.php';
-            $this->docs[$apiName] = include $docConfigPath;
+        if (isset($this->docs[$apiName])) {
+            return $this->docs[$apiName];
         }
+
+        $moduleConfigPath = $this->configModuleUtils->getModuleConfigPath($apiName);
+        $docConfigPath = dirname($moduleConfigPath) . '/documentation.config.php';
+        $this->docs[$apiName] = include $docConfigPath;
         return $this->docs[$apiName];
     }
-
 }

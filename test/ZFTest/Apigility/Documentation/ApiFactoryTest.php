@@ -1,28 +1,46 @@
 <?php
+/**
+ * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ */
 
 namespace ZFTest\Apigility\Documentation;
 
-
+use PHPUnit_Framework_TestCase as TestCase;
 use ZF\Apigility\Documentation\ApiFactory;
 
-class ApiFactoryTest extends \PHPUnit_Framework_TestCase
+class ApiFactoryTest extends TestCase
 {
-    /** @var ApiFactory */
     protected $apiFactory;
 
     public function setup()
     {
-        $this->apiFactory = new ApiFactory(
-            ($moduleManager = $this->getMock('Zend\ModuleManager\ModuleManager', array('getModules', 'getModule'))),
-            include __DIR__ . '/TestAsset/module-config/module.config.php',
-            ($moduleUtils = $this->getMock('ZF\Configuration\ModuleUtils', array('getModuleConfigPath')))
-        );
-
         $mockModule = $this->getMock('ZF\Apigility\Provider\ApigilityProviderInterface');
 
-        $moduleManager->expects($this->any())->method('getModules')->will($this->returnValue(array('Test')));
-        $moduleManager->expects($this->any())->method('getModule')->will($this->returnValue($mockModule));
-        $moduleUtils->expects($this->any())->method('getModuleConfigPath')->will($this->returnValue(__DIR__ . '/TestAsset/module-config/module.config.php'));
+        $moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
+            ->disableOriginalConstructor()
+            ->setMethods(array('getModules', 'getModule'))
+            ->getMock();
+        $moduleManager->expects($this->any())
+            ->method('getModules')
+            ->will($this->returnValue(array('Test')));
+        $moduleManager->expects($this->any())
+            ->method('getModule')
+            ->will($this->returnValue($mockModule));
+
+        $moduleUtils = $this->getMockBuilder('ZF\Configuration\ModuleUtils')
+            ->disableOriginalConstructor()
+            ->setMethods(array('getModuleConfigPath'))
+            ->getMock();
+        $moduleUtils->expects($this->any())
+            ->method('getModuleConfigPath')
+            ->will($this->returnValue(__DIR__ . '/TestAsset/module-config/module.config.php'));
+
+        $this->apiFactory = new ApiFactory(
+            $moduleManager,
+            include __DIR__ . '/TestAsset/module-config/module.config.php',
+            $moduleUtils
+        );
     }
 
     public function testCreateApiList()
@@ -44,7 +62,6 @@ class ApiFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateService()
     {
-        // $moduleConfig = include __DIR__ . '/TestAsset/module-config/module.config.php';
         $docConfig = include __DIR__ . '/TestAsset/module-config/documentation.config.php';
 
         $service = $this->apiFactory->createService('Test', 1, 'FooBar');
@@ -66,4 +83,3 @@ class ApiFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('ZF\Apigility\Documentation\Operation', $eOps[0]);
     }
 }
- 

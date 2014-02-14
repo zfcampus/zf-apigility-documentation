@@ -1,19 +1,33 @@
 <?php
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
 namespace ZF\Apigility\Documentation;
 
-class Field implements \JsonSerializable
+use ArrayIterator;
+use IteratorAggregate;
+
+class Field implements IteratorAggregate
 {
+    /**
+     * @var string
+     */
     protected $name;
+
+    /**
+     * @var string
+     */
     protected $description = '';
+
+    /**
+     * @var bool
+     */
     protected $required = false;
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
     public function setName($name)
     {
@@ -21,7 +35,7 @@ class Field implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -29,7 +43,7 @@ class Field implements \JsonSerializable
     }
 
     /**
-     * @param mixed $description
+     * @param string $description
      */
     public function setDescription($description)
     {
@@ -37,7 +51,7 @@ class Field implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDescription()
     {
@@ -45,7 +59,7 @@ class Field implements \JsonSerializable
     }
 
     /**
-     * @param mixed $required
+     * @param bool $required
      */
     public function setRequired($required)
     {
@@ -53,19 +67,35 @@ class Field implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isRequired()
     {
         return $this->required;
     }
 
-    public function jsonSerialize()
+    /**
+     * Cast object to array
+     *
+     * @return array
+     */
+    public function toArray()
     {
         return array(
             'description' => $this->description,
-            'required' => $this->required
+            'required' => $this->required,
         );
     }
+
+    /**
+     * Implement IteratorAggregate
+     *
+     * Passes the return value of toArray() to an ArrayIterator instance
+     *
+     * @return ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->toArray());
+    }
 }
- 

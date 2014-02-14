@@ -1,23 +1,37 @@
 <?php
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
 namespace ZF\Apigility\Documentation;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use ZF\ContentNegotiation\JsonModel;
+use ZF\ContentNegotiation\ViewModel;
 
 class Controller extends AbstractActionController
 {
+    /**
+     * @var ApiFactory
+     */
     protected $apiFactory;
 
+    /**
+     * @param ApiFactory $apiFactory
+     */
     public function __construct(ApiFactory $apiFactory)
     {
         $this->apiFactory = $apiFactory;
     }
 
+    /**
+     * Show/return documentation
+     *
+     * Returns a ContentNegotiation view model to allow for multiple
+     * representations of documentation.
+     *
+     * @return ViewModel
+     */
     public function showAction()
     {
         $apiName = $this->params()->fromRoute('api');
@@ -26,16 +40,15 @@ class Controller extends AbstractActionController
 
         if ($serviceName) {
             $service = $this->apiFactory->createService($apiName, $apiVersion, $serviceName);
-            return new JsonModel($service);
+            return new ViewModel($service);
         }
 
         if ($apiName) {
             $api = $this->apiFactory->createApi($apiName, $apiVersion);
-            return new JsonModel($api);
+            return new ViewModel($api);
         }
 
         $apiList = $this->apiFactory->createApiList();
-        return new JsonModel(array('apis' => $apiList));
+        return new ViewModel(array('apis' => $apiList));
     }
-
 }
