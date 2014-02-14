@@ -1,20 +1,37 @@
 <?php
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
 namespace ZF\Apigility\Documentation;
 
-class Operation implements \JsonSerializable
+use Zend\Stdlib\JsonSerializable;
+
+class Operation implements JsonSerializable
 {
+    /**
+     * @var string
+     */
     protected $httpMethod;
+
+    /**
+     * @var string
+     */
     protected $description;
+
+    /**
+     * @var string
+     */
     protected $requestDescription = '';
+
+    /**
+     * @var string
+     */
     protected $responseDescription = '';
 
     /**
-     * @param mixed $httpMethod
+     * @param string $httpMethod
      */
     public function setHttpMethod($httpMethod)
     {
@@ -22,7 +39,7 @@ class Operation implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getHttpMethod()
     {
@@ -30,7 +47,7 @@ class Operation implements \JsonSerializable
     }
 
     /**
-     * @param mixed $description
+     * @param string $description
      */
     public function setDescription($description)
     {
@@ -38,7 +55,7 @@ class Operation implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDescription()
     {
@@ -77,13 +94,17 @@ class Operation implements \JsonSerializable
         return $this->responseDescription;
     }
 
+    /**
+     * Implement JsonSerializable
+     * 
+     * @return array
+     */
     public function jsonSerialize()
     {
         return array(
             'description' => $this->description,
             'request' => $this->requestDescription,
-            'response' => $this->responseDescription
+            'response' => $this->responseDescription,
         );
     }
 }
- 

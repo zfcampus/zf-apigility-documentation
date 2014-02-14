@@ -1,22 +1,37 @@
 <?php
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
 namespace ZF\Apigility\Documentation;
 
+use Zend\Stdlib\JsonSerializable;
 
-class Api implements \JsonSerializable
+class Api implements JsonSerializable
 {
+    /**
+     * @var string
+     */
     protected $name;
+
+    /**
+     * @var int|string
+     */
     protected $version;
+
+    /**
+     * @var array
+     */
     protected $authorization;
 
+    /**
+     * @var array
+     */
     protected $services = array();
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
     public function setName($name)
     {
@@ -24,7 +39,7 @@ class Api implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -32,7 +47,7 @@ class Api implements \JsonSerializable
     }
 
     /**
-     * @param mixed $version
+     * @param int|string $version
      */
     public function setVersion($version)
     {
@@ -40,7 +55,7 @@ class Api implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return int|string
      */
     public function getVersion()
     {
@@ -48,7 +63,7 @@ class Api implements \JsonSerializable
     }
 
     /**
-     * @param mixed $authorization
+     * @param array $authorization
      */
     public function setAuthorization($authorization)
     {
@@ -56,33 +71,39 @@ class Api implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getAuthorization()
     {
         return $this->authorization;
     }
 
-
+    /**
+     * @param Service $service 
+     */
     public function addService(Service $service)
     {
         $this->services[] = $service;
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getServices()
     {
         return $this->services;
     }
 
-
+    /**
+     * Implements JsonSerializable
+     *
+     * @return array
+     */
     public function jsonSerialize()
     {
-        return [
-            'name' => $this->name,
-            'services' => $this->services
-        ];
+        return array(
+            'name'     => $this->name,
+            'services' => $this->services,
+        );
     }
 }

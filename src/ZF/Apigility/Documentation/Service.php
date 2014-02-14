@@ -1,28 +1,62 @@
 <?php
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
 namespace ZF\Apigility\Documentation;
 
-class Service implements \JsonSerializable
+use Zend\Stdlib\JsonSerializable;
+
+class Service implements JsonSerializable
 {
+    /**
+     * @var string
+     */
     protected $name;
+
+    /**
+     * @var string
+     */
     protected $description;
+
+    /**
+     * @var string
+     */
     protected $route;
 
+    /**
+     * @var string
+     */
     protected $contentNegotiator;
+
+    /**
+     * @var array
+     */
     protected $requestAcceptTypes;
+
+    /**
+     * @var array
+     */
     protected $requestContentTypes;
 
+    /**
+     * @var Operation[]
+     */
     protected $operations;
+
+    /**
+     * @var Operation[]
+     */
     protected $entityOperations;
 
+    /**
+     * @var array
+     */
     protected $fields = array();
 
     /**
-     * @param mixed $name
+     * @param string $name
      */
     public function setName($name)
     {
@@ -30,7 +64,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -38,7 +72,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @param mixed $description
+     * @param string $description
      */
     public function setDescription($description)
     {
@@ -46,7 +80,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDescription()
     {
@@ -54,7 +88,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @param mixed $route
+     * @param string $route
      */
     public function setRoute($route)
     {
@@ -62,7 +96,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getRoute()
     {
@@ -71,7 +105,7 @@ class Service implements \JsonSerializable
 
 
     /**
-     * @param mixed $contentNegotiator
+     * @param string $contentNegotiator
      */
     public function setContentNegotiator($contentNegotiator)
     {
@@ -79,7 +113,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getContentNegotiator()
     {
@@ -87,7 +121,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @param mixed $requestAcceptTypes
+     * @param array $requestAcceptTypes
      */
     public function setRequestAcceptTypes($requestAcceptTypes)
     {
@@ -95,7 +129,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getRequestAcceptTypes()
     {
@@ -103,7 +137,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @param mixed $requestContentTypes
+     * @param array $requestContentTypes
      */
     public function setRequestContentTypes($requestContentTypes)
     {
@@ -111,7 +145,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getRequestContentTypes()
     {
@@ -119,7 +153,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @param mixed $operations
+     * @param Operation[] $operations
      */
     public function setOperations($operations)
     {
@@ -127,7 +161,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Operation[]
      */
     public function getOperations()
     {
@@ -135,7 +169,7 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @param mixed $entityOperations
+     * @param Operation[] $entityOperations
      */
     public function setEntityOperations($entityOperations)
     {
@@ -143,17 +177,15 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Operation[]
      */
     public function getEntityOperations()
     {
         return $this->entityOperations;
     }
 
-
-
     /**
-     * @param mixed $fields
+     * @param array $fields
      */
     public function setFields($fields)
     {
@@ -161,13 +193,18 @@ class Service implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getFields()
     {
         return $this->fields;
     }
 
+    /**
+     * Implement JsonSerializable
+     * 
+     * @return array
+     */
     public function jsonSerialize()
     {
         $output = array(
@@ -202,4 +239,3 @@ class Service implements \JsonSerializable
         return $output;
     }
 }
- 
