@@ -38,11 +38,5 @@ return array(
                 2 => 'application/*+json',
             ),
         ),
-        'content_type_whitelist' => array(
-            'Test\\V1\\Rpc\\BizzBam\\Controller' => array(
-                0 => 'application/vnd.apigility.documentation.v1+json',
-                1 => 'application/json',
-            ),
-        ),
     ),
 );
