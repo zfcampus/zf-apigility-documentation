@@ -35,14 +35,12 @@ return array(
             'ZF\Apigility\Documentation\Controller' => array(
                 0 => 'application/vnd.swagger+json',
                 1 => 'application/json',
-                2 => 'application/*+json',
             ),
         ),
         'selectors' => array(
             'Documentation' => array(
                 'ZF\ContentNegotiation\JsonModel' => array(
                     'application/json',
-                    'application/*+json',
                 ),
             ),
         ),

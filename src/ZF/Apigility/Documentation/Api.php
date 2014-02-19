@@ -9,6 +9,8 @@ namespace ZF\Apigility\Documentation;
 use ArrayIterator;
 use IteratorAggregate;
 
+//use ZF\ContentNegotiation\ViewModel;
+
 class Api implements IteratorAggregate
 {
     /**
@@ -19,7 +21,7 @@ class Api implements IteratorAggregate
     /**
      * @var int|string
      */
-    protected $version;
+    protected $version = 1;
 
     /**
      * @var array
@@ -27,7 +29,7 @@ class Api implements IteratorAggregate
     protected $authorization;
 
     /**
-     * @var array
+     * @var Service[]
      */
     protected $services = array();
 
@@ -102,10 +104,15 @@ class Api implements IteratorAggregate
      */
     public function toArray()
     {
-        return array(
+        $array = array(
             'name'     => $this->name,
-            'services' => $this->services,
+            'version'  => $this->version,
+            'services' => array()
         );
+        foreach ($this->services as $i => $service) {
+            $array['services'][$i] = $service->toArray();
+        }
+        return $array;
     }
 
     /**

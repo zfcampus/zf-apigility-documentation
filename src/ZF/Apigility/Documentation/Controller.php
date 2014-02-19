@@ -35,7 +35,7 @@ class Controller extends AbstractActionController
     public function showAction()
     {
         $apiName = $this->params()->fromRoute('api');
-        $apiVersion = $this->params()->fromRoute('version');
+        $apiVersion = $this->params()->fromRoute('version', 1);
         $serviceName = $this->params()->fromRoute('service');
 
         if ($serviceName) {

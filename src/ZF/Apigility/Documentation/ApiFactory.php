@@ -72,7 +72,7 @@ class ApiFactory
      * @param int|string $apiVersion
      * @return Api
      */
-    public function createApi($apiName, $apiVersion)
+    public function createApi($apiName, $apiVersion = 1)
     {
         $api = new Api;
 
@@ -226,7 +226,12 @@ class ApiFactory
 
         $moduleConfigPath = $this->configModuleUtils->getModuleConfigPath($apiName);
         $docConfigPath = dirname($moduleConfigPath) . '/documentation.config.php';
-        $this->docs[$apiName] = include $docConfigPath;
+        if (file_exists($docConfigPath)) {
+            $this->docs[$apiName] = include $docConfigPath;
+        } else {
+            $this->docs[$apiName] = array();
+        }
+
         return $this->docs[$apiName];
     }
 }
