@@ -12,6 +12,11 @@ use IteratorAggregate;
 class Service implements IteratorAggregate
 {
     /**
+     * @var Api
+     */
+    protected $api;
+
+    /**
      * @var string
      */
     protected $name;
@@ -52,9 +57,25 @@ class Service implements IteratorAggregate
     protected $entityOperations;
 
     /**
-     * @var array
+     * @var Field[]
      */
     protected $fields = array();
+
+    /**
+     * @param \ZF\Apigility\Documentation\Api $api
+     */
+    public function setApi($api)
+    {
+        $this->api = $api;
+    }
+
+    /**
+     * @return \ZF\Apigility\Documentation\Api
+     */
+    public function getApi()
+    {
+        return $this->api;
+    }
 
     /**
      * @param string $name

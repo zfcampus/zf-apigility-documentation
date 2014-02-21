@@ -8,10 +8,7 @@ namespace ZF\Apigility\Documentation;
 
 use InvalidArgumentException;
 use Zend\ModuleManager\ModuleManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use ZF\Apigility\ApigilityModuleInterface;
 use ZF\Apigility\Provider\ApigilityProviderInterface;
-use ZF\Configuration\ResourceFactory as ConfigResourceFactory;
 use ZF\Configuration\ModuleUtils as ConfigModuleUtils;
 
 class ApiFactory
@@ -89,7 +86,7 @@ class ApiFactory
 
         foreach ($serviceConfigs as $restServiceName => $serviceConfig) {
             if (strpos($restServiceName, $apiName . '\\') === 0) {
-                $service = $this->createService($apiName, $apiVersion, $serviceConfig['service_name']);
+                $service = $this->createService($api, $serviceConfig['service_name']);
                 $api->addService($service);
             }
         }
@@ -106,21 +103,17 @@ class ApiFactory
      * @param string $serviceName
      * @return Service
      */
-    public function createService($apiName, $apiVersion, $serviceName)
+    public function createService(Api $api, $serviceName)
     {
         $service = new Service();
+        $service->setApi($api);
 
         $serviceData = null;
 
-        $apiVersion = (int) $apiVersion;
-        if ($apiVersion == 0) {
-            $apiVersion = 1;
-        }
-
         foreach ($this->config['zf-rest'] as $serviceClassName => $restConfig) {
-            if ((strpos($serviceClassName, $apiName . '\\') === 0)
+            if ((strpos($serviceClassName, $api->getName() . '\\') === 0)
                 && ($restConfig['service_name'] === $serviceName)
-                && (strstr($serviceClassName, '\\V' . $apiVersion . '\\') !== false)
+                && (strstr($serviceClassName, '\\V' . $api->getVersion() . '\\') !== false)
             ) {
                 $serviceData = $restConfig;
                 break;
@@ -129,9 +122,9 @@ class ApiFactory
 
         if (!$serviceData) {
             foreach ($this->config['zf-rpc'] as $serviceClassName => $rpcConfig) {
-                if ((strpos($serviceClassName, $apiName . '\\') === 0)
+                if ((strpos($serviceClassName, $api->getName() . '\\') === 0)
                     && ($rpcConfig['service_name'] === $serviceName)
-                    && (strstr($serviceClassName, '\\V' . $apiVersion . '\\') !== false)
+                    && (strstr($serviceClassName, '\\V' . $api->getVersion() . '\\') !== false)
                 ) {
                     $serviceData = $rpcConfig;
                     break;
@@ -143,7 +136,7 @@ class ApiFactory
             throw new InvalidArgumentException('A service by that name could not be found');
         }
 
-        $docsArray = $this->getDocumentationConfig($apiName);
+        $docsArray = $this->getDocumentationConfig($api->getName());
 
         $service->setName($serviceData['service_name']);
         if (isset($docsArray[$serviceClassName]['description'])) {
@@ -151,7 +144,7 @@ class ApiFactory
         }
 
         $route = $this->config['router']['routes'][$serviceData['route_name']]['options']['route'];
-        $service->setRoute(str_replace('[/v:version]', '', $route)); // remove intenral version prefix, hacky
+        $service->setRoute(str_replace('[/v:version]', '', $route)); // remove internal version prefix, hacky
 
         $baseOperationData = (isset($serviceData['collection_http_methods']))
             ? $serviceData['collection_http_methods']

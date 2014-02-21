@@ -38,17 +38,18 @@ class Controller extends AbstractActionController
         $apiVersion = $this->params()->fromRoute('version', 1);
         $serviceName = $this->params()->fromRoute('service');
 
-        if ($serviceName) {
-            $service = $this->apiFactory->createService($apiName, $apiVersion, $serviceName);
-            return new ViewModel($service);
+        if (!$apiName) {
+            $apiList = $this->apiFactory->createApiList();
+            return new ViewModel(array('apis' => $apiList, 'type' => 'api_list'));
         }
 
-        if ($apiName) {
-            $api = $this->apiFactory->createApi($apiName, $apiVersion);
-            return new ViewModel($api);
+        $api = $this->apiFactory->createApi($apiName, $apiVersion);
+
+        if (!$serviceName) {
+            return new ViewModel(array('documentation' => $api, 'type' => 'api'));
         }
 
-        $apiList = $this->apiFactory->createApiList();
-        return new ViewModel(array('apis' => $apiList));
+        $service = $this->apiFactory->createService($api, $serviceName);
+        return new ViewModel(array('documentation' => $service, 'type' => 'service'));
     }
 }
