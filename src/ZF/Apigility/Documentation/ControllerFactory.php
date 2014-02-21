@@ -14,6 +14,9 @@ class ControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $controllers)
     {
         $services = $controllers->getServiceLocator();
-        return new Controller($services->get('ZF\Apigility\Documentation\ApiFactory'));
+        return new Controller(
+            $services->get('ZF\Apigility\Documentation\ApiFactory'),
+            $services->get('ViewHelperManager')->get('ServerUrl')
+        );
     }
 }

@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Documentation;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Helper\ServerUrl;
 use ZF\ContentNegotiation\ViewModel;
 
 class Controller extends AbstractActionController
@@ -19,9 +20,10 @@ class Controller extends AbstractActionController
     /**
      * @param ApiFactory $apiFactory
      */
-    public function __construct(ApiFactory $apiFactory)
+    public function __construct(ApiFactory $apiFactory, ServerUrl $serverUrlViewHelper)
     {
         $this->apiFactory = $apiFactory;
+        $this->serverUrlViewHelper = $serverUrlViewHelper;
     }
 
     /**
@@ -38,18 +40,27 @@ class Controller extends AbstractActionController
         $apiVersion = $this->params()->fromRoute('version', 1);
         $serviceName = $this->params()->fromRoute('service');
 
+        $viewModel = new ViewModel();
+        $viewModel->setVariable('baseUrl', $this->serverUrlViewHelper->__invoke());
+
         if (!$apiName) {
             $apiList = $this->apiFactory->createApiList();
-            return new ViewModel(array('apis' => $apiList, 'type' => 'api_list'));
+            $viewModel->setVariable('apis', $apiList);
+            $viewModel->setVariable('type', 'api_list');
+            return $viewModel;
         }
 
         $api = $this->apiFactory->createApi($apiName, $apiVersion);
 
         if (!$serviceName) {
-            return new ViewModel(array('documentation' => $api, 'type' => 'api'));
+            $viewModel->setVariable('documentation', $api);
+            $viewModel->setVariable('type', 'api');
+            return $viewModel;
         }
 
         $service = $this->apiFactory->createService($api, $serviceName);
-        return new ViewModel(array('documentation' => $service, 'type' => 'service'));
+        $viewModel->setVariable('documentation', $service);
+        $viewModel->setVariable('type', 'service');
+        return $viewModel;
     }
 }
