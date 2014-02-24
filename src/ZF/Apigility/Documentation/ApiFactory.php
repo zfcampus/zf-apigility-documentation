@@ -87,7 +87,9 @@ class ApiFactory
         foreach ($serviceConfigs as $restServiceName => $serviceConfig) {
             if (strpos($restServiceName, $apiName . '\\') === 0) {
                 $service = $this->createService($api, $serviceConfig['service_name']);
-                $api->addService($service);
+                if ($service) {
+                    $api->addService($service);
+                }
             }
         }
 
@@ -133,7 +135,7 @@ class ApiFactory
         }
 
         if (!$serviceData || !isset($serviceClassName)) {
-            throw new InvalidArgumentException('A service by that name could not be found');
+            return false;
         }
 
         $docsArray = $this->getDocumentationConfig($api->getName());
