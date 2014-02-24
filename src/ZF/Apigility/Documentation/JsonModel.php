@@ -14,8 +14,8 @@ class JsonModel extends BaseJsonModel
     public function getVariables()
     {
         switch ($this->variables['type']) {
-            case 'api-list':
-                return $this->variables['documentation'];
+            case 'apiList':
+                return $this->variables['apis'];
             case 'api':
             case 'service':
                 return $this->variables['documentation']->toArray();

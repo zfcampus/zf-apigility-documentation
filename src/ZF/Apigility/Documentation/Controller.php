@@ -37,7 +37,7 @@ class Controller extends AbstractActionController
     public function showAction()
     {
         $apiName = $this->params()->fromRoute('api');
-        $apiVersion = $this->params()->fromRoute('version', 1);
+        $apiVersion = $this->params()->fromRoute('version', '1');
         $serviceName = $this->params()->fromRoute('service');
 
         $viewModel = new ViewModel();
@@ -46,7 +46,7 @@ class Controller extends AbstractActionController
         if (!$apiName) {
             $apiList = $this->apiFactory->createApiList();
             $viewModel->setVariable('apis', $apiList);
-            $viewModel->setVariable('type', 'api_list');
+            $viewModel->setVariable('type', 'apiList');
             return $viewModel;
         }
 

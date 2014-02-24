@@ -84,8 +84,9 @@ class ApiFactory
             $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rpc']);
         }
 
-        foreach ($serviceConfigs as $restServiceName => $serviceConfig) {
-            if (strpos($restServiceName, $apiName . '\\') === 0) {
+        foreach ($serviceConfigs as $serviceName => $serviceConfig) {
+            if (strpos($serviceName, $apiName . '\\') === 0
+                && strpos($serviceName, '\V' . $api->getVersion() . '\\')) {
                 $service = $this->createService($api, $serviceConfig['service_name']);
                 if ($service) {
                     $api->addService($service);
