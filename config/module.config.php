@@ -39,7 +39,7 @@ return array(
         ),
         'selectors' => array(
             'Documentation' => array(
-                'ZF\ContentNegotiation\JsonModel' => array(
+                'ZF\Apigility\Documentation\JsonModel' => array(
                     'application/json',
                 ),
             ),
