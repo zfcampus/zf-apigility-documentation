@@ -173,6 +173,11 @@ class ApiFactory
         $route = $this->config['router']['routes'][$serviceData['route_name']]['options']['route'];
         $service->setRoute(str_replace('[/v:version]', '', $route)); // remove internal version prefix, hacky
 
+        if (isset($serviceData['route_identifier_name'])) {
+            $service->setRouteIdentifierName($serviceData['route_identifier_name']);
+        }
+
+
         $baseOperationData = (isset($serviceData['collection_http_methods']))
             ? $serviceData['collection_http_methods']
             : $serviceData['http_methods'];

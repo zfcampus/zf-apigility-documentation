@@ -34,6 +34,11 @@ class Service implements IteratorAggregate
     /**
      * @var string
      */
+    protected $routeIdentifierName;
+
+    /**
+     * @var string
+     */
     protected $contentNegotiator;
 
     /**
@@ -125,6 +130,21 @@ class Service implements IteratorAggregate
         return $this->route;
     }
 
+    /**
+     * @param string $identifierName
+     */
+    public function setRouteIdentifierName($identifierName)
+    {
+        $this->routeIdentifierName = $identifierName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteIdentifierName()
+    {
+        return $this->routeIdentifierName;
+    }
 
     /**
      * @param string $contentNegotiator
@@ -233,6 +253,7 @@ class Service implements IteratorAggregate
             'name' => $this->name,
             'description' => $this->description,
             'route' => $this->route,
+            'route_identifier_name' => $this->routeIdentifierName,
             'request_accept_types' => $this->requestAcceptTypes,
             'request_content_types' => $this->requestContentTypes,
             'response_content_types' => $this->requestAcceptTypes,
