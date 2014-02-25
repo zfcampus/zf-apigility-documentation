@@ -54,10 +54,10 @@ class ApiFactory
     {
         $apigilityModules = array();
         $q = preg_quote('\\');
-        $versionRegex = '#' . $q . 'V(?P<version>[^' . $q . ']+)' . $q . '#';
         foreach ($this->moduleManager->getModules() as $moduleName) {
             $module = $this->moduleManager->getModule($moduleName);
             if ($module instanceof ApigilityProviderInterface) {
+                $versionRegex = '#' . preg_quote($moduleName) . $q . 'V(?P<version>[^' . $q . ']+)' . $q . '#';
                 $versions = array();
                 $serviceConfigs = array();
                 if ($this->config['zf-rest']) {
