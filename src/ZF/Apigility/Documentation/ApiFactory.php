@@ -53,10 +53,12 @@ class ApiFactory
     public function createApiList()
     {
         $apigilityModules = array();
+        $q = preg_quote('\\');
+        $versionRegex = '#' . $q . 'V(?P<version>[^' . $q . ']+)' . $q . '#';
         foreach ($this->moduleManager->getModules() as $moduleName) {
             $module = $this->moduleManager->getModule($moduleName);
             if ($module instanceof ApigilityProviderInterface) {
-                $latestVersion = 1;
+                $versions = array();
                 $serviceConfigs = array();
                 if ($this->config['zf-rest']) {
                     $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rest']);
@@ -66,15 +68,18 @@ class ApiFactory
                 }
 
                 foreach ($serviceConfigs as $serviceName => $serviceConfig) {
-                    preg_match('#\\\\V(\d)\\\\#', $serviceName, $matches);
-                    if ($matches && $matches[1] > $latestVersion) {
-                        $latestVersion = (int) $matches[1];
+                    if (!preg_match($versionRegex, $serviceName, $matches)) {
+                        continue;
+                    }
+                    $version = $matches['version'];
+                    if (!in_array($version, $versions)) {
+                        $versions[] = $version;
                     }
                 }
 
                 $apigilityModules[] = array(
-                    'name' => $moduleName,
-                    'latest_version' => $latestVersion
+                    'name'     => $moduleName,
+                    'versions' => $versions,
                 );
             }
         }
