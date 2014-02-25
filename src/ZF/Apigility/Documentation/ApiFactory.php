@@ -56,7 +56,26 @@ class ApiFactory
         foreach ($this->moduleManager->getModules() as $moduleName) {
             $module = $this->moduleManager->getModule($moduleName);
             if ($module instanceof ApigilityProviderInterface) {
-                $apigilityModules[] = $moduleName;
+                $latestVersion = 1;
+                $serviceConfigs = array();
+                if ($this->config['zf-rest']) {
+                    $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rest']);
+                }
+                if ($this->config['zf-rpc']) {
+                    $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rpc']);
+                }
+
+                foreach ($serviceConfigs as $serviceName => $serviceConfig) {
+                    preg_match('#\\\\V(\d)\\\\#', $serviceName, $matches);
+                    if ($matches && $matches[1] > $latestVersion) {
+                        $latestVersion = (int) $matches[1];
+                    }
+                }
+
+                $apigilityModules[] = array(
+                    'name' => $moduleName,
+                    'latest_version' => $latestVersion
+                );
             }
         }
         return $apigilityModules;
