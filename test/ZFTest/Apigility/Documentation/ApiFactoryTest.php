@@ -47,7 +47,12 @@ class ApiFactoryTest extends TestCase
     {
         $apiList = $this->apiFactory->createApiList();
         $this->assertCount(1, $apiList);
-        $this->assertEquals('Test', $apiList[0]);
+        $api = array_shift($apiList);
+        $this->assertArrayHasKey('name', $api);
+        $this->assertEquals('Test', $api['name']);
+        $this->assertArrayHasKey('versions', $api);
+        $this->assertInternalType('array', $api['versions']);
+        $this->assertEquals(array('1'), $api['versions']);
     }
 
     public function testCreateApi()
@@ -63,8 +68,9 @@ class ApiFactoryTest extends TestCase
     public function testCreateService()
     {
         $docConfig = include __DIR__ . '/TestAsset/module-config/documentation.config.php';
+        $api = $this->apiFactory->createApi('Test', 1);
 
-        $service = $this->apiFactory->createService('Test', 1, 'FooBar');
+        $service = $this->apiFactory->createService($api, 'FooBar');
         $this->assertInstanceOf('ZF\Apigility\Documentation\Service', $service);
 
         $this->assertEquals('FooBar', $service->getName());
@@ -76,10 +82,40 @@ class ApiFactoryTest extends TestCase
 
         $ops = $service->getOperations();
         $this->assertCount(2, $ops);
-        $this->assertInstanceOf('ZF\Apigility\Documentation\Operation', $ops[0]);
+
+        foreach ($ops as $operation) {
+            $this->assertInstanceOf('ZF\Apigility\Documentation\Operation', $operation);
+            switch ($operation->getHttpMethod()) {
+                case 'GET':
+                    $this->assertFalse($operation->requiresAuthorization());
+                    break;
+                case 'POST':
+                    $this->assertTrue($operation->requiresAuthorization());
+                    break;
+                default:
+                    $this->fail('Unexpected HTTP method encountered: ' . $operation->getHttpMethod());
+                    break;
+            }
+        }
 
         $eOps = $service->getEntityOperations();
         $this->assertCount(4, $eOps);
-        $this->assertInstanceOf('ZF\Apigility\Documentation\Operation', $eOps[0]);
+
+        foreach ($eOps as $operation) {
+            $this->assertInstanceOf('ZF\Apigility\Documentation\Operation', $operation);
+            switch ($operation->getHttpMethod()) {
+                case 'GET':
+                    $this->assertFalse($operation->requiresAuthorization());
+                    break;
+                case 'PATCH':
+                case 'PUT':
+                case 'DELETE':
+                    $this->assertTrue($operation->requiresAuthorization());
+                    break;
+                default:
+                    $this->fail('Unexpected entity HTTP method encountered: ' . $operation->getHttpMethod());
+                    break;
+            }
+        }
     }
 }

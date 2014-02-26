@@ -136,6 +136,8 @@ class ApiFactory
         $service->setApi($api);
 
         $serviceData = null;
+        $isRest      = false;
+        $isRpc       = false;
 
         foreach ($this->config['zf-rest'] as $serviceClassName => $restConfig) {
             if ((strpos($serviceClassName, $api->getName() . '\\') === 0)
@@ -143,6 +145,7 @@ class ApiFactory
                 && (strstr($serviceClassName, '\\V' . $api->getVersion() . '\\') !== false)
             ) {
                 $serviceData = $restConfig;
+                $isRest = true;
                 break;
             }
         }
@@ -154,6 +157,8 @@ class ApiFactory
                     && (strstr($serviceClassName, '\\V' . $api->getVersion() . '\\') !== false)
                 ) {
                     $serviceData = $rpcConfig;
+                    $serviceData['action'] = $this->marshalActionFromRouteConfig($serviceName, $serviceClassName, $rpcConfig);
+                    $isRpc = true;
                     break;
                 }
             }
@@ -162,6 +167,8 @@ class ApiFactory
         if (!$serviceData || !isset($serviceClassName)) {
             return false;
         }
+
+        $authorizations = $this->getAuthorizations($serviceClassName);
 
         $docsArray = $this->getDocumentationConfig($api->getName());
 
@@ -191,6 +198,20 @@ class ApiFactory
                 $op->setRequestDescription($docsArray[$serviceClassName]['collection'][$httpMethod]['request']);
                 $op->setResponseDescription($docsArray[$serviceClassName]['collection'][$httpMethod]['response']);
             }
+            if ($isRest) {
+                $op->setRequiresAuthorization(
+                    isset($authorizations['collection'][$httpMethod])
+                    ? $authorizations['collection'][$httpMethod]
+                    : false
+                );
+            }
+            if ($isRpc) {
+                $op->setRequiresAuthorization(
+                    isset($authorizations['actions'][$serviceData['action']][$httpMethod])
+                    ? $authorizations['actions'][$serviceData['action']][$httpMethod]
+                    : false
+                );
+            }
             $ops[] = $op;
         }
         $service->setOperations($ops);
@@ -205,6 +226,11 @@ class ApiFactory
                     $op->setRequestDescription($docsArray[$serviceClassName]['collection'][$httpMethod]['request']);
                     $op->setResponseDescription($docsArray[$serviceClassName]['collection'][$httpMethod]['response']);
                 }
+                $op->setRequiresAuthorization(
+                    isset($authorizations['entity'][$httpMethod])
+                    ? $authorizations['entity'][$httpMethod]
+                    : false
+                );
                 $ops[] = $op;
             }
             $service->setEntityOperations($ops);
@@ -258,5 +284,43 @@ class ApiFactory
         }
 
         return $this->docs[$apiName];
+    }
+
+    /**
+     * Retrieve authorization data for the given service
+     * 
+     * @param string $serviceName 
+     * @return array
+     */
+    protected function getAuthorizations($serviceName)
+    {
+        if (! isset($this->config['zf-mvc-auth']['authorization'][$serviceName])) {
+            return array();
+        }
+        return $this->config['zf-mvc-auth']['authorization'][$serviceName];
+    }
+
+    /**
+     * Determine the RPC action name based on the routing configuration
+     * 
+     * @param string $serviceName 
+     * @param string $serviceClassName 
+     * @param array $config 
+     * @return string
+     */
+    protected function marshalActionFromRouteConfig($serviceName, $serviceClassName, array $config)
+    {
+        if (! isset($config['route_name'])) {
+            return $serviceName;
+        }
+        if (! isset($this->config['router']['routes'][$config['route_name']])) {
+            return $serviceName;
+        }
+        $route = $this->config['router']['routes'][$config['route_name']];
+        if (! isset($route['options']['defaults']['action'])) {
+            return $serviceName;
+        }
+
+        return $route['options']['defaults']['action'];
     }
 }
