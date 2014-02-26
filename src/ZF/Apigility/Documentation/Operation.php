@@ -27,6 +27,13 @@ class Operation implements IteratorAggregate
     protected $requestDescription = '';
 
     /**
+     * Whether or not the operation requires authorization
+     * 
+     * @var bool
+     */
+    protected $requiresAuthorization = false;
+
+    /**
      * @var string
      */
     protected $responseDescription = '';
@@ -77,6 +84,22 @@ class Operation implements IteratorAggregate
     public function getRequestDescription()
     {
         return $this->requestDescription;
+    }
+
+    /**
+     * @param bool $flag 
+     */
+    public function setRequiresAuthorization($flag)
+    {
+        $this->requiresAuthorization = (bool) $flag;
+    }
+
+    /**
+     * @return bool
+     */
+    public function requiresAuthorization()
+    {
+        return $this->requiresAuthorization;
     }
 
     /**

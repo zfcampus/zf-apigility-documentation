@@ -198,4 +198,57 @@ return array(
             ),
         ),
     ),
+    'zf-mvc-auth' => array(
+        'authentication' => array(
+            'http' => array(
+                'realm' => 'api',
+                'htpasswd' => __DIR__ . '/htpasswd',
+            ),
+        ),
+        'authorization' => array(
+            'Test\V1\Rest\FooBar\Controller' => array(
+                'entity' => array(
+                    'DELETE' => true,
+                    'GET'    => false,
+                    'PATCH'  => true,
+                    'POST'   => false,
+                    'PUT'    => true,
+                ),
+                'collection' => array(
+                    'DELETE' => false,
+                    'GET'    => false,
+                    'PATCH'  => false,
+                    'POST'   => true,
+                    'PUT'    => false,
+                ),
+            ),
+            'Test\V1\Rest\BooBaz\Controller' => array(
+                'entity' => array(
+                    'DELETE' => true,
+                    'GET'    => false,
+                    'PATCH'  => true,
+                    'POST'   => false,
+                    'PUT'    => true,
+                ),
+                'collection' => array(
+                    'DELETE' => false,
+                    'GET'    => false,
+                    'PATCH'  => false,
+                    'POST'   => false,
+                    'PUT'    => false,
+                ),
+            ),
+            'Test\V1\Rpc\MyRpc\Controller' => array(
+                'actions' => array(
+                    'myRpc' => array(
+                        'DELETE' => false,
+                        'GET'    => true,
+                        'PATCH'  => false,
+                        'POST'   => false,
+                        'PUT'    => false,
+                    ),
+                ),
+            ),
+        ),
+    ),
 );
