@@ -221,10 +221,10 @@ class ApiFactory
             foreach ($serviceData['entity_http_methods'] as $httpMethod) {
                 $op = new Operation();
                 $op->setHttpMethod($httpMethod);
-                if (isset($docsArray[$serviceClassName]['collection'][$httpMethod])) {
-                    $op->setDescription($docsArray[$serviceClassName]['collection'][$httpMethod]['description']);
-                    $op->setRequestDescription($docsArray[$serviceClassName]['collection'][$httpMethod]['request']);
-                    $op->setResponseDescription($docsArray[$serviceClassName]['collection'][$httpMethod]['response']);
+                if (isset($docsArray[$serviceClassName]['entity'][$httpMethod])) {
+                    $op->setDescription($docsArray[$serviceClassName]['entity'][$httpMethod]['description']);
+                    $op->setRequestDescription($docsArray[$serviceClassName]['entity'][$httpMethod]['request']);
+                    $op->setResponseDescription($docsArray[$serviceClassName]['entity'][$httpMethod]['response']);
                 }
                 $op->setRequiresAuthorization(
                     isset($authorizations['entity'][$httpMethod])
