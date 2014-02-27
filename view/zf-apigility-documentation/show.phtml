@@ -1,0 +1,10 @@
+<?php
+if ($this->type === 'apiList') {
+    include __DIR__ . '/api-list.phtml';
+}
+if ($this->type === 'api') {
+    include __DIR__ . '/api.phtml';
+}
+if ($this->type === 'service') {
+    include __DIR__ . '/service.phtml';
+}
