@@ -217,8 +217,10 @@
                                             </tbody>
                                         </table>
 
+                                        <?php if (! in_array($operation->getHttpMethod(), array('GET', 'DELETE'))): ?>
                                         <h4>Body</h4>
                                         <pre class="pre-scrollable"><?php echo $operation->getRequestDescription() ?></pre>
+                                        <?php endif ?>
                                     </div>
                                 </div>
 
@@ -249,8 +251,10 @@
                                             </tbody>
                                         </table>
 
+                                        <?php if ($operation->getHttpMethod() !== 'DELETE'): ?>
                                         <h4>Body</h4>
                                         <pre class="pre-scrollable"><?php echo $operation->getResponseDescription() ?></pre>
+                                        <?php endif ?>
                                     </div>
                                 </div>
                             </div>
