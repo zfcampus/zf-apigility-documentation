@@ -29,7 +29,6 @@
                 <?php foreach ($service->getOperations() as $operation): 
                     $opCollapseParent = $this->escapeHtmlAttr(sprintf('ops-accordion-%s-%s', $service->getName(), $operation->getHttpMethod()));
                     $opCollapseId = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s', $service->getName(), $operation->getHttpMethod()));
-                    $hasOptionalSegments = (empty($entityOperations) && hasOptionalSegments($service));
                 ?>
                 <div class="panel-group" id="<?php echo $opCollapseParent ?>">
                     <div class="panel panel-default">
@@ -110,7 +109,7 @@
 
                                     <div class="panel-body">
                                         <h4>Status Codes</h4>
-                                        <?php echo getStatusCodes($service, $operation, $hasOptionalSegments) ?>
+                                        <?php echo getStatusCodes($operation) ?>
 
                                         <h4>Headers</h4>
                                         <table class="table table-striped table-bordered">
@@ -148,7 +147,6 @@
                     foreach ($entityOperations as $j => $operation): 
                         $opCollapseParent = $this->escapeHtmlAttr(sprintf('ops-accordion-%s-%s-entity', $service->getName(), $operation->getHttpMethod()));
                         $opCollapseId = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s-entity', $service->getName(), $operation->getHttpMethod()));
-                        $hasOptionalSegments = true;
                 ?>
                 <div class="panel-group" id="<?php echo $opCollapseParent ?>">
                     <div class="panel panel-default">
@@ -229,7 +227,7 @@
 
                                     <div class="panel-body">
                                         <h4>Status Codes</h4>
-                                        <?php echo getStatusCodes($service, $operation, $hasOptionalSegments) ?>
+                                        <?php echo getStatusCodes($operation) ?>
 
                                         <h4>Headers</h4>
                                         <table class="table table-striped table-bordered">
@@ -297,57 +295,11 @@ function getContentTypeHeaders($service, $view)
     return implode("\n", $types);
 }
 
-function getStatusCodes($service, $operation, $hasOptionalSegments)
+function getStatusCodes($operation)
 {
-    $statusCodes = array(
-        array('code' => '406', 'message' => 'Not Acceptable'),
-        array('code' => '415', 'message' => 'Unsupported Media Type'),
-    );
-
-    switch ($operation->getHttpMethod()) {
-        case 'GET':
-            array_push($statusCodes, array('code' => '200', 'message' => 'OK'));
-            if ($hasOptionalSegments) {
-                array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
-            }
-            break;
-        case 'DELETE':
-            array_push($statusCodes, array('code' => '204', 'message' => 'No Content'));
-            if ($hasOptionalSegments) {
-                array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
-            }
-            break;
-        case 'PATCH':
-        case 'POST':
-        case 'PUT':
-            array_push($statusCodes, array('code' => '200', 'message' => 'OK'));
-            if ($hasOptionalSegments) {
-                array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
-            }
-            $fields = $service->getFields();
-            if (!empty($fields)) {
-                array_push($statusCodes, array('code' => '400', 'message' => 'Client Error'));
-                array_push($statusCodes, array('code' => '422', 'message' => 'Unprocessable Entity'));
-            }
-            break;
-    }
-
-    if ($operation->requiresAuthorization()) {
-        array_push($statusCodes, array('code' => '401', 'message' => 'Unauthorized'));
-        array_push($statusCodes, array('code' => '403', 'message' => 'Forbidden'));
-    }
-
     $statusCodes = array_map(function ($status) {
         return sprintf('<li class="list-group-item"><strong>%s:</strong> %s</li>', $status['code'], $status['message']);
-    }, $statusCodes);
+    }, $operation->getResponseStatusCodes());
 
     return sprintf("<ul class=\"list-group\">\n%s\n</ul>\n", implode("\n", $statusCodes));
-}
-
-function hasOptionalSegments($service)
-{
-    if (preg_match('#\[.*?:.+\]#', $service->getRoute())) {
-        return true;
-    }
-    return false;
 }
