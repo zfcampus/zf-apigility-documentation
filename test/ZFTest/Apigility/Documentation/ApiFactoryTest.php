@@ -13,6 +13,45 @@ class ApiFactoryTest extends TestCase
 {
     protected $apiFactory;
 
+    protected $expectedStatusCodes = array(
+        array(
+            'code' => '200',
+            'message' => 'OK',
+        ),
+        array(
+            'code' => '204',
+            'message' => 'No Content',
+        ),
+        array(
+            'code' => '400',
+            'message' => 'Client Error',
+        ),
+        array(
+            'code' => '401',
+            'message' => 'Unauthorized',
+        ),
+        array(
+            'code' => '403',
+            'message' => 'Forbidden',
+        ),
+        array(
+            'code' => '404',
+            'message' => 'Not Found',
+        ),
+        array(
+            'code' => '406',
+            'message' => 'Not Acceptable',
+        ),
+        array(
+            'code' => '415',
+            'message' => 'Unsupported Media Type',
+        ),
+        array(
+            'code' => '422',
+            'message' => 'Unprocessable Entity',
+        ),
+    );
+
     public function setup()
     {
         $mockModule = $this->getMock('ZF\Apigility\Provider\ApigilityProviderInterface');
@@ -41,6 +80,46 @@ class ApiFactoryTest extends TestCase
             include __DIR__ . '/TestAsset/module-config/module.config.php',
             $moduleUtils
         );
+    }
+
+    public function assertContainsStatusCodes($expectedCodes, $actualCodes, $message = '')
+    {
+        if (!is_array($expectedCodes)) {
+            $expectedCodes = array($expectedCodes);
+        }
+
+        $expectedCodePairs = array_filter($this->expectedStatusCodes, function ($code) use ($expectedCodes) {
+            if (!is_array($code)) {
+                return false;
+            }
+            if (!array_key_exists('code', $code)) {
+                return false;
+            }
+            if (!in_array($code['code'], $expectedCodes)) {
+                return false;
+            }
+
+            return true;
+        });
+
+        if (empty($expectedCodePairs)) {
+            $this->fail(sprintf(
+                'No codes provided, or no known codes match: %s',
+                var_export($expectedCodes, 1)
+            ));
+        }
+
+        foreach ($expectedCodePairs as $code) {
+            if (!in_array($code, $actualCodes, true)) {
+                $this->fail(sprintf(
+                    "Failed to find code %s in actual codes:\n%s\n",
+                    $code['code'],
+                    var_export($actualCodes, 1)
+                ));
+            }
+        }
+
+        return true;
     }
 
     public function testCreateApiList()
@@ -85,12 +164,15 @@ class ApiFactoryTest extends TestCase
 
         foreach ($ops as $operation) {
             $this->assertInstanceOf('ZF\Apigility\Documentation\Operation', $operation);
+            $statusCodes = $operation->getResponseStatusCodes();
             switch ($operation->getHttpMethod()) {
                 case 'GET':
                     $this->assertFalse($operation->requiresAuthorization());
+                    $this->assertContainsStatusCodes(array('406', '415', '200'), $statusCodes);
                     break;
                 case 'POST':
                     $this->assertTrue($operation->requiresAuthorization());
+                    $this->assertContainsStatusCodes(array('406', '415', '400', '422', '401', '403', '200'), $statusCodes);
                     break;
                 default:
                     $this->fail('Unexpected HTTP method encountered: ' . $operation->getHttpMethod());
@@ -103,14 +185,20 @@ class ApiFactoryTest extends TestCase
 
         foreach ($eOps as $operation) {
             $this->assertInstanceOf('ZF\Apigility\Documentation\Operation', $operation);
+            $statusCodes = $operation->getResponseStatusCodes();
             switch ($operation->getHttpMethod()) {
                 case 'GET':
                     $this->assertFalse($operation->requiresAuthorization());
+                    $this->assertContainsStatusCodes(array('406', '415', '404', '200'), $statusCodes);
                     break;
                 case 'PATCH':
                 case 'PUT':
+                    $this->assertTrue($operation->requiresAuthorization());
+                    $this->assertContainsStatusCodes(array('406', '415', '400', '422', '401', '403', '200'), $statusCodes);
+                    break;
                 case 'DELETE':
                     $this->assertTrue($operation->requiresAuthorization());
+                    $this->assertContainsStatusCodes(array('406', '415', '401', '403', '204'), $statusCodes);
                     break;
                 default:
                     $this->fail('Unexpected entity HTTP method encountered: ' . $operation->getHttpMethod());
