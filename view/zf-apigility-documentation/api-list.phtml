@@ -18,7 +18,7 @@
                 $versions = array_map(function ($version) use ($name, $view) {
                     return sprintf(
                         '<a href="%s">v%s</a>',
-                        $view->url('zf-apigility-documentation', array(
+                        $view->url('zf-apigility/documentation', array(
                             'api'     => $name,
                             'version' => $version
                         )),
