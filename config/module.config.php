@@ -42,7 +42,16 @@ return array(
                 'ZF\Apigility\Documentation\JsonModel' => array(
                     'application/json',
                 ),
+                'Zend\View\Model\ViewModel' => array(
+                    'text/html',
+                    'application/xhtml+xml',
+                ),
             ),
+        ),
+    ),
+    'view_manager' => array(
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
         ),
     ),
 );

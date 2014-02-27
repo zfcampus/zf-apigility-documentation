@@ -41,6 +41,7 @@ class Controller extends AbstractActionController
         $serviceName = $this->params()->fromRoute('service');
 
         $viewModel = new ViewModel();
+        $viewModel->setTemplate('zf-apigility-documentation/show');
         $viewModel->setVariable('baseUrl', $this->serverUrlViewHelper->__invoke());
 
         if (!$apiName) {

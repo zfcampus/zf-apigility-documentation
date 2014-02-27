@@ -1,0 +1,33 @@
+<h2>Documentation</h2>
+
+<h4>Available APIs</h4>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>API</th>
+            <th>Versions</th>
+        </tr>
+    </thead>
+    <tbody><?php foreach ($this->apis as $api): 
+        $name = $api['name']; ?>
+        <tr>
+            <td><?php echo $this->escapeHtml($name) ?></td>
+            <td><?php 
+                $view     = $this;
+                $versions = array_map(function ($version) use ($name, $view) {
+                    return sprintf(
+                        '<a href="%s">v%s</a>',
+                        $view->url('zf-apigility-documentation', array(
+                            'api'     => $name,
+                            'version' => $version
+                        )),
+                        $view->escapeHtml($version)
+                    );
+                }, $api['versions']);
+                echo implode('&nbsp;|&nbsp;', $versions);
+            ?></td>
+        </tr>
+    <?php endforeach; ?></tbody>
+</table>
+

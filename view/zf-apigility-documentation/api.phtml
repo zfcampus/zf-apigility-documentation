@@ -1,0 +1,349 @@
+<?php $api = $this->documentation ?>
+<h2>Documentation</h2>
+
+<h4><?php echo $this->escapeHtml($api->getName()) ?> (v<?php echo $this->escapeHtml($api->getVersion()) ?>)</h4>
+
+<div class="row">
+    <aside class="col-md-3" role="nav">
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href="<?php echo $this->url('zf-apigility-documentation', array('api' => null, 'version' => null)) ?>">API List</a></li>
+        </ul>
+    </aside>
+
+    <main class="col-md-9 panel-group" role="main" id="docs-accordion">
+    <?php foreach ($api->getServices() as $service): 
+        $fields = $service->getFields();
+        $entityOperations = $service->getEntityOperations();
+        $serviceCollapseId = $this->escapeHtmlAttr(sprintf('docs-collapse-%s', $service->getName()));
+    ?>
+        <div class="panel panel-success">
+            <div class="panel-heading" data-toggle="collapse" data-parent="docs-accordion" href="#<?php echo $serviceCollapseId ?>">
+                <h4 class="panel-title"><?php echo $this->escapeHtml($service->getName()) ?></h4>
+            </div>
+
+            <div class="panel-collapse collapse" id="<?php echo $serviceCollapseId ?>">
+                <div class="panel-body">
+                    <p class="text-muted"><?php echo $this->escapeHtml($service->getDescription()) ?></p>
+                </div>
+
+                <?php foreach ($service->getOperations() as $operation): 
+                    $opCollapseParent = $this->escapeHtmlAttr(sprintf('ops-accordion-%s-%s', $service->getName(), $operation->getHttpMethod()));
+                    $opCollapseId = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s', $service->getName(), $operation->getHttpMethod()));
+                    $hasOptionalSegments = (empty($entityOperations) && hasOptionalSegments($service));
+                ?>
+                <div class="panel-group" id="<?php echo $opCollapseParent ?>">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" data-toggle="collapse" data-parent="<?php echo $opCollapseParent ?>" href="#<?php echo $opCollapseId ?>">
+                            <h4 class="panel-title">
+                                <span class="badge"><?php echo $this->escapeHtml($operation->getHttpMethod()) ?></span>
+                                <?php echo $this->escapeHtml(getPath($service, $operation)) ?>
+                            </h4>
+                        </div>
+
+                        <div class="panel-collapse collapse" id="<?php echo $opCollapseId ?>">
+                            <div class="panel-body">
+                                <p class="text-muted"><?php echo $this->escapeHtml($operation->getDescription()) ?></p>
+                                
+                                <?php if (! empty($fields)): ?>
+                                <h4>Fields</h4>
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Description</th>
+                                            <th class="center-block">Required</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php foreach ($fields as $field): ?>
+                                        <tr>
+                                            <td><?php echo $this->escapeHtml($field->getName()) ?></td>
+                                            <td><?php echo $this->escapeHtml($field->getDescription()) ?></td>
+                                            <td class="center-block"><span class="badge"><?php echo ($field->isRequired()) ? 'YES' : 'NO' ?></td>
+                                        </tr>
+                                    <?php endforeach ?>
+                                    </tbody>
+                                </table>
+                                <?php endif ?>
+
+                                <div class="panel-info">
+                                    <div class="panel-heading"><h4 class="panel-title">Request</h4></div>
+
+                                    <div class="panel-body">
+                                        <h4>Headers</h4>
+                                        <table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Header</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Accept</td>
+                                                    <td class="list-group"><?php echo getAcceptHeaders($service, $this) ?></td>
+                                                </tr>
+                                                <?php if (in_array($operation->getHttpMethod(), array('POST', 'PUT', 'PATCH'))): ?>
+                                                <tr>
+                                                    <td>Content-Type</td>
+                                                    <td class="list-group"><?php echo getContentTypeHeaders($service, $this) ?></td>
+                                                </tr>
+                                                <?php endif ?>
+                                                <?php if ($operation->requiresAuthorization()): ?>
+                                                <tr>
+                                                    <td>Authorization</td>
+                                                    <td class="text-muted">HTTP Basic, HTTP Digest, or OAuth2 Bearer token (check API provider for details)</td>
+                                                </tr>
+                                                <?php endif ?>
+                                            </tbody>
+                                        </table>
+
+                                        <?php if (! in_array($operation->getHttpMethod(), array('GET', 'DELETE'))): ?>
+                                        <h4>Body</h4>
+                                        <pre class="pre-scrollable"><?php echo $operation->getRequestDescription() ?></pre>
+                                        <?php endif ?>
+                                    </div>
+                                </div>
+
+                                <div class="panel-info">
+                                    <div class="panel-heading"><h4 class="panel-title">Response</h4></div>
+
+                                    <div class="panel-body">
+                                        <h4>Status Codes</h4>
+                                        <?php echo getStatusCodes($service, $operation, $hasOptionalSegments) ?>
+
+                                        <h4>Headers</h4>
+                                        <table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Header</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Content-Type</td>
+                                                    <td class="list-group"><?php echo getAcceptHeaders($service, $this) ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Allow</td>
+                                                    <td class="text-muted">Comma-separated list of all HTTP methods allowed</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <?php if ($operation->getHttpMethod() !== 'DELETE'): ?>
+                                        <h4>Body</h4>
+                                        <pre class="pre-scrollable"><?php echo $operation->getResponseDescription() ?></pre>
+                                        <?php endif ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach ?>
+
+                <?php if ($entityOperations):
+                    foreach ($entityOperations as $j => $operation): 
+                        $opCollapseParent = $this->escapeHtmlAttr(sprintf('ops-accordion-%s-%s-entity', $service->getName(), $operation->getHttpMethod()));
+                        $opCollapseId = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s-entity', $service->getName(), $operation->getHttpMethod()));
+                        $hasOptionalSegments = true;
+                ?>
+                <div class="panel-group" id="<?php echo $opCollapseParent ?>">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" data-toggle="collapse" data-parent="<?php echo $opCollapseParent ?>" href="#<?php echo $opCollapseId ?>">
+                            <h4 class="panel-title">
+                                <span class="badge"><?php echo $this->escapeHtml($operation->getHttpMethod()) ?></span>
+                                <?php echo $this->escapeHtml($service->getRoute()) ?>
+                            </h4>
+                        </div>
+
+                        <div class="panel-collapse collapse" id="<?php echo $opCollapseId ?>">
+                            <div class="panel-body">
+                                <p class="text-muted"><?php echo $this->escapeHtml($operation->getDescription()) ?></p>
+                                
+                                <?php if (! empty($fields)): ?>
+                                <h4>Fields</h4>
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Description</th>
+                                            <th class="center-block">Required</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php foreach ($fields as $field): ?>
+                                        <tr>
+                                            <td><?php echo $this->escapeHtml($field->getName()) ?></td>
+                                            <td><?php echo $this->escapeHtml($field->getDescription()) ?></td>
+                                            <td class="center-block"><span class="badge"><?php echo ($field->isRequired()) ? 'YES' : 'NO' ?></td>
+                                        </tr>
+                                    <?php endforeach ?>
+                                    </tbody>
+                                </table>
+                                <?php endif ?>
+
+                                <div class="panel-info">
+                                    <div class="panel-heading"><h4 class="panel-title">Request</h4></div>
+
+                                    <div class="panel-body">
+                                        <h4>Headers</h4>
+                                        <table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Header</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Accept</td>
+                                                    <td class="list-group"><?php echo getAcceptHeaders($service, $this) ?></td>
+                                                </tr>
+                                                <?php if (in_array($operation->getHttpMethod(), array('POST', 'PUT', 'PATCH'))): ?>
+                                                <tr>
+                                                    <td>Content-Type</td>
+                                                    <td class="list-group"><?php echo getContentTypeHeaders($service, $this) ?></td>
+                                                </tr>
+                                                <?php endif ?>
+                                                <?php if ($operation->requiresAuthorization()): ?>
+                                                <tr>
+                                                    <td>Authorization</td>
+                                                    <td class="text-muted">HTTP Basic, HTTP Digest, or OAuth2 Bearer token (check API provider for details)</td>
+                                                </tr>
+                                                <?php endif ?>
+                                            </tbody>
+                                        </table>
+
+                                        <h4>Body</h4>
+                                        <pre class="pre-scrollable"><?php echo $operation->getRequestDescription() ?></pre>
+                                    </div>
+                                </div>
+
+                                <div class="panel-info">
+                                    <div class="panel-heading"><h4 class="panel-title">Response</h4></div>
+
+                                    <div class="panel-body">
+                                        <h4>Status Codes</h4>
+                                        <?php echo getStatusCodes($service, $operation, $hasOptionalSegments) ?>
+
+                                        <h4>Headers</h4>
+                                        <table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Header</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Content-Type</td>
+                                                    <td class="list-group"><?php echo getAcceptHeaders($service, $this) ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Allow</td>
+                                                    <td class="text-muted">Comma-separated list of all HTTP methods allowed</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <h4>Body</h4>
+                                        <pre class="pre-scrollable"><?php echo $operation->getResponseDescription() ?></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; endif; ?>
+            </div>
+        </div>
+    <?php endforeach ?>
+    </main>
+</div>
+
+<?php
+function getPath($service, $operation)
+{
+    $route = $service->getRoute();
+    $routeIdentifier = $service->getRouteIdentifierName();
+    $entityOps = $service->getEntityOperations();
+    if (empty($routeIdentifier) || empty($entityOps)) {
+        return $route;
+    }
+
+    return preg_replace('#\[/?:' . preg_quote($routeIdentifier) . '\]#', '', $route);
+}
+
+function getAcceptHeaders($service, $view)
+{
+    $types = array_map(function ($type) use ($view) {
+        return sprintf('<div class="list-group-item">%s</div>', $view->escapeHtml($type));
+    }, $service->getRequestAcceptTypes());
+    return implode("\n", $types);
+}
+
+function getContentTypeHeaders($service, $view)
+{
+    $types = array_map(function ($type) use ($view) {
+        return sprintf('<div class="list-group-item">%s</div>', $view->escapeHtml($type));
+    }, $service->getRequestContentTypes());
+    return implode("\n", $types);
+}
+
+function getStatusCodes($service, $operation, $hasOptionalSegments)
+{
+    $statusCodes = array(
+        array('code' => '406', 'message' => 'Not Acceptable'),
+        array('code' => '415', 'message' => 'Unsupported Media Type'),
+    );
+
+    switch ($operation->getHttpMethod()) {
+        case 'GET':
+            array_push($statusCodes, array('code' => '200', 'message' => 'OK'));
+            if ($hasOptionalSegments) {
+                array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
+            }
+            break;
+        case 'DELETE':
+            array_push($statusCodes, array('code' => '204', 'message' => 'No Content'));
+            if ($hasOptionalSegments) {
+                array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
+            }
+            break;
+        case 'PATCH':
+        case 'POST':
+        case 'PUT':
+            array_push($statusCodes, array('code' => '200', 'message' => 'OK'));
+            if ($hasOptionalSegments) {
+                array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
+            }
+            $fields = $service->getFields();
+            if (!empty($fields)) {
+                array_push($statusCodes, array('code' => '400', 'message' => 'Client Error'));
+                array_push($statusCodes, array('code' => '422', 'message' => 'Unprocessable Entity'));
+            }
+            break;
+    }
+
+    if ($operation->requiresAuthorization()) {
+        array_push($statusCodes, array('code' => '401', 'message' => 'Unauthorized'));
+        array_push($statusCodes, array('code' => '403', 'message' => 'Forbidden'));
+    }
+
+    $statusCodes = array_map(function ($status) {
+        return sprintf('<li class="list-group-item"><strong>%s:</strong> %s</li>', $status['code'], $status['message']);
+    }, $statusCodes);
+
+    return sprintf("<ul class=\"list-group\">\n%s\n</ul>\n", implode("\n", $statusCodes));
+}
+
+function hasOptionalSegments($service)
+{
+    if (preg_match('#\[.*?:.+\]#', $service->getRoute())) {
+        return true;
+    }
+    return false;
+}
