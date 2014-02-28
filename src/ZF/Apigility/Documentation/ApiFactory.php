@@ -299,8 +299,8 @@ class ApiFactory
 
     /**
      * Retrieve authorization data for the given service
-     * 
-     * @param string $serviceName 
+     *
+     * @param string $serviceName
      * @return array
      */
     protected function getAuthorizations($serviceName)
@@ -313,10 +313,10 @@ class ApiFactory
 
     /**
      * Determine the RPC action name based on the routing configuration
-     * 
-     * @param string $serviceName 
-     * @param string $serviceClassName 
-     * @param array $config 
+     *
+     * @param string $serviceName
+     * @param string $serviceClassName
+     * @param array $config
      * @return string
      */
     protected function marshalActionFromRouteConfig($serviceName, $serviceClassName, array $config)

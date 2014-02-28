@@ -13,8 +13,8 @@ class AgAcceptHeaders extends AbstractHelper
 {
     /**
      * Render a list group of Accept headers composed by the service
-     * 
-     * @param  Service $service 
+     *
+     * @param  Service $service
      * @return string
      */
     public function __invoke(Service $service)

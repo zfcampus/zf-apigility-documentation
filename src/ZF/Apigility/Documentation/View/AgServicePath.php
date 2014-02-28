@@ -14,9 +14,9 @@ class AgServicePath extends AbstractHelper
 {
     /**
      * Return the URI path for a given service and operation
-     * 
-     * @param  Service $service 
-     * @param  Operation $operation 
+     *
+     * @param  Service $service
+     * @param  Operation $operation
      * @return string
      */
     public function __invoke(Service $service, Operation $operation)

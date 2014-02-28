@@ -13,8 +13,8 @@ class AgContentTypeHeaders extends AbstractHelper
 {
     /**
      * Render a list group of Content-Type headers composed by the service
-     * 
-     * @param  Service $service 
+     *
+     * @param  Service $service
      * @return string
      */
     public function __invoke(Service $service)

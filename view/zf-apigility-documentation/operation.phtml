@@ -18,7 +18,7 @@ $collapseId     = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s%s', $service
         <div class="panel-collapse collapse" id="<?php echo $collapseId ?>">
             <div class="panel-body">
                 <p class="text-muted"><?php echo $this->escapeHtml($operation->getDescription()) ?></p>
-                
+
                 <?php if (! empty($fields)): ?>
                 <h4>Fields</h4>
                 <table class="table table-striped table-bordered">
