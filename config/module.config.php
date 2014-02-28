@@ -53,6 +53,14 @@ return array(
             ),
         ),
     ),
+    'view_helpers' => array(
+        'invokables' => array(
+            'agacceptheaders'      => 'ZF\Apigility\Documentation\View\AgAcceptHeaders',
+            'agcontenttypeheaders' => 'ZF\Apigility\Documentation\View\AgContentTypeHeaders',
+            'agservicepath'        => 'ZF\Apigility\Documentation\View\AgServicePath',
+            'agstatuscodes'        => 'ZF\Apigility\Documentation\View\AgStatusCodes',
+        ),
+    ),
     'view_manager' => array(
         'template_path_stack' => array(
             __DIR__ . '/../view',

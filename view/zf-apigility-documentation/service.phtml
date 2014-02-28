@@ -1,0 +1,39 @@
+<?php
+$service = $this->service;
+$fields = $service->getFields();
+$entityOperations = $service->getEntityOperations();
+$serviceCollapseId = $this->escapeHtmlAttr(sprintf('docs-collapse-%s', $service->getName()));
+?>
+<?php if (!$this->embedded): ?>
+<h4>API Documentation for Service <?php echo $this->escapeHtml($service->getName()) ?></h4>
+<?php endif ?>
+
+<div class="panel panel-success">
+    <div class="panel-heading" data-toggle="collapse" data-parent="docs-accordion" href="#<?php echo $serviceCollapseId ?>">
+        <h4 class="panel-title"><?php echo $this->escapeHtml($service->getName()) ?></h4>
+    </div>
+
+    <div class="panel-collapse collapse<?php echo ($this->embedded) ? '' : ' in' ?>" id="<?php echo $serviceCollapseId ?>">
+        <div class="panel-body">
+            <p class="text-muted"><?php echo $this->escapeHtml($service->getDescription()) ?></p>
+        </div>
+
+        <?php foreach ($service->getOperations() as $operation) {
+            echo $this->render('zf-apigility-documentation/operation', array(
+                'operation' => $operation,
+                'service'   => $service,
+                'isEntity'  => false,
+            ));
+        } ?>
+
+        <?php if ($entityOperations) {
+            foreach ($entityOperations as $j => $operation) {
+                echo $this->render('zf-apigility-documentation/operation', array(
+                    'operation' => $operation,
+                    'service'   => $service,
+                    'isEntity'  => true,
+                ));
+            }
+        } ?>
+    </div>
+</div>

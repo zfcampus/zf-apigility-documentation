@@ -28,7 +28,7 @@ class Operation implements IteratorAggregate
 
     /**
      * Whether or not the operation requires authorization
-     * 
+     *
      * @var bool
      */
     protected $requiresAuthorization = false;
@@ -37,6 +37,13 @@ class Operation implements IteratorAggregate
      * @var string
      */
     protected $responseDescription = '';
+
+    /**
+     * Possible response status codes and messages
+     *
+     * @var array
+     */
+    protected $responseStatusCodes = array();
 
     /**
      * @param string $httpMethod
@@ -87,7 +94,7 @@ class Operation implements IteratorAggregate
     }
 
     /**
-     * @param bool $flag 
+     * @param bool $flag
      */
     public function setRequiresAuthorization($flag)
     {
@@ -119,6 +126,22 @@ class Operation implements IteratorAggregate
     }
 
     /**
+     * @param array $statusCodes
+     */
+    public function setResponseStatusCodes(array $statusCodes)
+    {
+        $this->responseStatusCodes = $statusCodes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getResponseStatusCodes()
+    {
+        return $this->responseStatusCodes;
+    }
+
+    /**
      * Cast object to array
      *
      * @return array
@@ -128,7 +151,9 @@ class Operation implements IteratorAggregate
         return array(
             'description' => $this->description,
             'request' => $this->requestDescription,
+            'requires_authorization' => $this->requiresAuthorization,
             'response' => $this->responseDescription,
+            'response_status_codes' => $this->responseStatusCodes,
         );
     }
 

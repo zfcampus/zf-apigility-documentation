@@ -138,6 +138,8 @@ class ApiFactory
         $serviceData = null;
         $isRest      = false;
         $isRpc       = false;
+        $hasSegments = false;
+        $hasFields   = false;
 
         foreach ($this->config['zf-rest'] as $serviceClassName => $restConfig) {
             if ((strpos($serviceClassName, $api->getName() . '\\') === 0)
@@ -146,6 +148,7 @@ class ApiFactory
             ) {
                 $serviceData = $restConfig;
                 $isRest = true;
+                $hasSegments = true;
                 break;
             }
         }
@@ -179,9 +182,29 @@ class ApiFactory
 
         $route = $this->config['router']['routes'][$serviceData['route_name']]['options']['route'];
         $service->setRoute(str_replace('[/v:version]', '', $route)); // remove internal version prefix, hacky
+        if ($isRpc) {
+            $hasSegments = $this->hasOptionalSegments($route);
+        }
 
         if (isset($serviceData['route_identifier_name'])) {
             $service->setRouteIdentifierName($serviceData['route_identifier_name']);
+        }
+
+        if (isset($this->config['zf-content-validation'][$serviceClassName]['input_filter'])) {
+            $validatorName = $this->config['zf-content-validation'][$serviceClassName]['input_filter'];
+            $fields = array();
+            if (isset($this->config['input_filters'][$validatorName])) {
+                foreach ($this->config['input_filters'][$validatorName] as $fieldData) {
+                    $fields[] = $field = new Field();
+                    $field->setName($fieldData['name']);
+                    if (isset($fieldData['description'])) {
+                        $field->setDescription($fieldData['description']);
+                    }
+                    $field->setRequired($fieldData['required']);
+                }
+                $service->setFields($fields);
+                $hasFields = true;
+            }
         }
 
 
@@ -204,6 +227,8 @@ class ApiFactory
                     ? $authorizations['collection'][$httpMethod]
                     : false
                 );
+
+                $op->setResponseStatusCodes($this->getStatusCodes($httpMethod, false, $hasFields, $op->requiresAuthorization()));
             }
             if ($isRpc) {
                 $op->setRequiresAuthorization(
@@ -211,6 +236,7 @@ class ApiFactory
                     ? $authorizations['actions'][$serviceData['action']][$httpMethod]
                     : false
                 );
+                $op->setResponseStatusCodes($this->getStatusCodes($httpMethod, $hasSegments, $hasFields, $op->requiresAuthorization()));
             }
             $ops[] = $op;
         }
@@ -231,25 +257,10 @@ class ApiFactory
                     ? $authorizations['entity'][$httpMethod]
                     : false
                 );
+                $op->setResponseStatusCodes($this->getStatusCodes($httpMethod, true, $hasFields, $op->requiresAuthorization()));
                 $ops[] = $op;
             }
             $service->setEntityOperations($ops);
-        }
-
-        if (isset($this->config['zf-content-validation'][$serviceClassName]['input_filter'])) {
-            $validatorName = $this->config['zf-content-validation'][$serviceClassName]['input_filter'];
-            $fields = array();
-            if (isset($this->config['input_filters'][$validatorName])) {
-                foreach ($this->config['input_filters'][$validatorName] as $fieldData) {
-                    $fields[] = $field = new Field();
-                    $field->setName($fieldData['name']);
-                    if (isset($fieldData['description'])) {
-                        $field->setDescription($fieldData['description']);
-                    }
-                    $field->setRequired($fieldData['required']);
-                }
-                $service->setFields($fields);
-            }
         }
 
         if (isset($this->config['zf-content-negotiation']['accept_whitelist'][$serviceClassName])) {
@@ -288,8 +299,8 @@ class ApiFactory
 
     /**
      * Retrieve authorization data for the given service
-     * 
-     * @param string $serviceName 
+     *
+     * @param string $serviceName
      * @return array
      */
     protected function getAuthorizations($serviceName)
@@ -302,10 +313,10 @@ class ApiFactory
 
     /**
      * Determine the RPC action name based on the routing configuration
-     * 
-     * @param string $serviceName 
-     * @param string $serviceClassName 
-     * @param array $config 
+     *
+     * @param string $serviceName
+     * @param string $serviceClassName
+     * @param array $config
      * @return string
      */
     protected function marshalActionFromRouteConfig($serviceName, $serviceClassName, array $config)
@@ -322,5 +333,52 @@ class ApiFactory
         }
 
         return $route['options']['defaults']['action'];
+    }
+
+    protected function hasOptionalSegments($route)
+    {
+        return preg_match('#\[.*?:.+\]#', $route);
+    }
+
+    protected function getStatusCodes($httpMethod, $hasOptionalSegments, $hasValidation, $requiresAuthorization)
+    {
+        $statusCodes = array(
+            array('code' => '406', 'message' => 'Not Acceptable'),
+            array('code' => '415', 'message' => 'Unsupported Media Type'),
+        );
+
+        switch ($httpMethod) {
+            case 'GET':
+                array_push($statusCodes, array('code' => '200', 'message' => 'OK'));
+                if ($hasOptionalSegments) {
+                    array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
+                }
+                break;
+            case 'DELETE':
+                array_push($statusCodes, array('code' => '204', 'message' => 'No Content'));
+                if ($hasOptionalSegments) {
+                    array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
+                }
+                break;
+            case 'PATCH':
+            case 'POST':
+            case 'PUT':
+                array_push($statusCodes, array('code' => '200', 'message' => 'OK'));
+                if ($hasOptionalSegments) {
+                    array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
+                }
+                if ($hasValidation) {
+                    array_push($statusCodes, array('code' => '400', 'message' => 'Client Error'));
+                    array_push($statusCodes, array('code' => '422', 'message' => 'Unprocessable Entity'));
+                }
+                break;
+        }
+
+        if ($requiresAuthorization) {
+            array_push($statusCodes, array('code' => '401', 'message' => 'Unauthorized'));
+            array_push($statusCodes, array('code' => '403', 'message' => 'Forbidden'));
+        }
+
+        return $statusCodes;
     }
 }
