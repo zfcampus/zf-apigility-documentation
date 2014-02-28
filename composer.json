@@ -23,7 +23,7 @@
         }
     },
     "require": {
-        "php": ">=5.4.8",
+        "php": ">=5.3.23",
         "zendframework/zendframework": "~2.3-dev"
     },
     "require-dev": {
