@@ -21,7 +21,7 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface
         return array(
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/ZF/Apigility/Documentation/',
+                    __NAMESPACE__ => __DIR__ . '/src/',
                 ),
             ),
         );

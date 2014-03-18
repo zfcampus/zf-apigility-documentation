@@ -27,10 +27,12 @@
         "zendframework/zendframework": "~2.3"
     },
     "require-dev": {
-        "phpunit/PHPUnit": "3.7.*"
+        "fabpot/php-cs-fixer": "*@dev",
+        "phpunit/PHPUnit": "3.7.*",
+        "satooshi/php-coveralls": ">=0.6.0"
     },
     "autoload": {
-        "psr-0": {
+        "psr-4": {
             "ZF\\Apigility\\Documentation\\": "src/",
             "ZFTest\\Apigility\\Documentation\\": "test/"
         },
