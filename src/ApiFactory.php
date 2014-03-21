@@ -220,8 +220,12 @@ class ApiFactory
             $op->setHttpMethod($httpMethod);
             if (isset($docsArray[$serviceClassName]['collection'][$httpMethod])) {
                 $op->setDescription($docsArray[$serviceClassName]['collection'][$httpMethod]['description']);
-                $op->setRequestDescription($docsArray[$serviceClassName]['collection'][$httpMethod]['request']);
-                $op->setResponseDescription($docsArray[$serviceClassName]['collection'][$httpMethod]['response']);
+
+                $requestDescription = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['request']) ? $docsArray[$serviceClassName]['collection'][$httpMethod]['request'] : '';
+                $op->setRequestDescription($requestDescription);
+                
+                $responseDescription = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['response']) ? $docsArray[$serviceClassName]['collection'][$httpMethod]['response'] : '';
+                $op->setResponseDescription($responseDescription);
             }
             if ($isRest) {
                 $op->setRequiresAuthorization(
@@ -251,8 +255,12 @@ class ApiFactory
                 $op->setHttpMethod($httpMethod);
                 if (isset($docsArray[$serviceClassName]['entity'][$httpMethod])) {
                     $op->setDescription($docsArray[$serviceClassName]['entity'][$httpMethod]['description']);
-                    $op->setRequestDescription($docsArray[$serviceClassName]['entity'][$httpMethod]['request']);
-                    $op->setResponseDescription($docsArray[$serviceClassName]['entity'][$httpMethod]['response']);
+
+                    $requestDescription = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['request']) ? $docsArray[$serviceClassName]['entity'][$httpMethod]['request'] : '';
+                    $op->setRequestDescription($requestDescription);
+                    
+                    $responseDescription = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['response']) ? $docsArray[$serviceClassName]['entity'][$httpMethod]['response'] : '';
+                    $op->setResponseDescription($responseDescription);
                 }
                 $op->setRequiresAuthorization(
                     isset($authorizations['entity'][$httpMethod])
