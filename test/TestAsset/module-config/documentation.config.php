@@ -75,4 +75,12 @@ return array(
         ),
         'description' => 'Some general notes about the FooBar rest service',
     ),
+    'Test\\V1\\Rpc\\Ping\\Controller' => array(
+        'GET' => array(
+            'description' => 'Ping the API to see uptime and network lag',
+            'request' => null,
+            'response' => '{"ack": 123456789}',
+        ),
+        'description' => 'Ping the API',
+    ),
 );

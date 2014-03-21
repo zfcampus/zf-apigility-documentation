@@ -218,16 +218,17 @@ class ApiFactory
         foreach ($baseOperationData as $httpMethod) {
             $op = new Operation();
             $op->setHttpMethod($httpMethod);
-            if (isset($docsArray[$serviceClassName]['collection'][$httpMethod])) {
-                $op->setDescription($docsArray[$serviceClassName]['collection'][$httpMethod]['description']);
+
+            if ($isRest) {
+                $description = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['description']) ? $docsArray[$serviceClassName]['collection'][$httpMethod]['description'] : '';
+                $op->setDescription($description);
 
                 $requestDescription = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['request']) ? $docsArray[$serviceClassName]['collection'][$httpMethod]['request'] : '';
                 $op->setRequestDescription($requestDescription);
-                
+
                 $responseDescription = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['response']) ? $docsArray[$serviceClassName]['collection'][$httpMethod]['response'] : '';
+
                 $op->setResponseDescription($responseDescription);
-            }
-            if ($isRest) {
                 $op->setRequiresAuthorization(
                     isset($authorizations['collection'][$httpMethod])
                     ? $authorizations['collection'][$httpMethod]
@@ -236,7 +237,17 @@ class ApiFactory
 
                 $op->setResponseStatusCodes($this->getStatusCodes($httpMethod, false, $hasFields, $op->requiresAuthorization()));
             }
+
             if ($isRpc) {
+                $description = isset($docsArray[$serviceClassName][$httpMethod]['description']) ? $docsArray[$serviceClassName][$httpMethod]['description'] : '';
+                $op->setDescription($description);
+
+                $requestDescription = isset($docsArray[$serviceClassName][$httpMethod]['request']) ? $docsArray[$serviceClassName][$httpMethod]['request'] : '';
+                $op->setRequestDescription($requestDescription);
+
+                $responseDescription = isset($docsArray[$serviceClassName][$httpMethod]['response']) ? $docsArray[$serviceClassName][$httpMethod]['response'] : '';
+                $op->setResponseDescription($responseDescription);
+
                 $op->setRequiresAuthorization(
                     isset($authorizations['actions'][$serviceData['action']][$httpMethod])
                     ? $authorizations['actions'][$serviceData['action']][$httpMethod]
@@ -244,6 +255,7 @@ class ApiFactory
                 );
                 $op->setResponseStatusCodes($this->getStatusCodes($httpMethod, $hasSegments, $hasFields, $op->requiresAuthorization()));
             }
+
             $ops[] = $op;
         }
         $service->setOperations($ops);
@@ -253,15 +265,16 @@ class ApiFactory
             foreach ($serviceData['entity_http_methods'] as $httpMethod) {
                 $op = new Operation();
                 $op->setHttpMethod($httpMethod);
-                if (isset($docsArray[$serviceClassName]['entity'][$httpMethod])) {
-                    $op->setDescription($docsArray[$serviceClassName]['entity'][$httpMethod]['description']);
 
-                    $requestDescription = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['request']) ? $docsArray[$serviceClassName]['entity'][$httpMethod]['request'] : '';
-                    $op->setRequestDescription($requestDescription);
-                    
-                    $responseDescription = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['response']) ? $docsArray[$serviceClassName]['entity'][$httpMethod]['response'] : '';
-                    $op->setResponseDescription($responseDescription);
-                }
+                $description = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['description']) ? $docsArray[$serviceClassName]['entity'][$httpMethod]['description'] : '';
+                $op->setDescription($description);
+
+                $requestDescription = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['request']) ? $docsArray[$serviceClassName]['entity'][$httpMethod]['request'] : '';
+                $op->setRequestDescription($requestDescription);
+
+                $responseDescription = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['response']) ? $docsArray[$serviceClassName]['entity'][$httpMethod]['response'] : '';
+                $op->setResponseDescription($responseDescription);
+
                 $op->setRequiresAuthorization(
                     isset($authorizations['entity'][$httpMethod])
                     ? $authorizations['entity'][$httpMethod]

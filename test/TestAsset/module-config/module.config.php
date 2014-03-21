@@ -35,6 +35,16 @@ return array(
                     ),
                 ),
             ),
+            'test.rpc.ping' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/ping',
+                    'defaults' => array(
+                        'controller' => 'Test\\V1\\Rpc\\Ping\\Controller',
+                        'action' => 'ping',
+                    ),
+                ),
+            ),
         ),
     ),
     'zf-versioning' => array(
@@ -42,6 +52,7 @@ return array(
             0 => 'test.rest.foo-bar',
             1 => 'test.rest.boo-baz',
             2 => 'test.rpc.my-rpc',
+            3 => 'test.rpc.ping',
         ),
     ),
     'service_manager' => array(
@@ -101,6 +112,7 @@ return array(
             'Test\\V1\\Rest\\FooBar\\Controller' => 'HalJson',
             'Test\\V1\\Rest\\BooBaz\\Controller' => 'HalJson',
             'Test\\V1\\Rpc\\MyRpc\\Controller' => 'Json',
+            'Test\\V1\\Rpc\\Ping\\Controller' => 'Json',
         ),
         'accept_whitelist' => array(
             'Test\\V1\\Rest\\FooBar\\Controller' => array(
@@ -118,6 +130,11 @@ return array(
                 1 => 'application/json',
                 2 => 'application/*+json',
             ),
+            'Test\\V1\\Rpc\\Ping\\Controller' => array(
+                0 => 'application/vnd.test.v1+json',
+                1 => 'application/json',
+                2 => 'application/*+json',
+            ),
         ),
         'content_type_whitelist' => array(
             'Test\\V1\\Rest\\FooBar\\Controller' => array(
@@ -129,6 +146,10 @@ return array(
                 1 => 'application/json',
             ),
             'Test\\V1\\Rpc\\MyRpc\\Controller' => array(
+                0 => 'application/vnd.test.v1+json',
+                1 => 'application/json',
+            ),
+            'Test\\V1\\Rpc\\Ping\\Controller' => array(
                 0 => 'application/vnd.test.v1+json',
                 1 => 'application/json',
             ),
@@ -165,6 +186,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Test\\V1\\Rpc\\MyRpc\\Controller' => 'Test\\V1\\Rpc\\MyRpc\\MyRpcController',
+            'Test\\V1\\Rpc\\Ping\\Controller' => 'Test\\V1\\Rpc\\Ping\\PingController',
         ),
     ),
     'zf-rpc' => array(
@@ -174,6 +196,13 @@ return array(
                 0 => 'GET',
             ),
             'route_name' => 'test.rpc.my-rpc',
+        ),
+        'Test\\V1\\Rpc\\Ping\\Controller' => array(
+            'service_name' => 'Ping',
+            'http_methods' => array(
+                0 => 'GET',
+            ),
+            'route_name' => 'test.rpc.ping',
         ),
     ),
     'zf-content-validation' => array(
@@ -243,6 +272,17 @@ return array(
                     'myRpc' => array(
                         'DELETE' => false,
                         'GET'    => true,
+                        'PATCH'  => false,
+                        'POST'   => false,
+                        'PUT'    => false,
+                    ),
+                ),
+            ),
+            'Test\V1\Rpc\Ping\Controller' => array(
+                'actions' => array(
+                    'ping' => array(
+                        'DELETE' => false,
+                        'GET'    => false,
                         'PATCH'  => false,
                         'POST'   => false,
                         'PUT'    => false,
