@@ -110,7 +110,9 @@ class ApiFactory
 
         foreach ($serviceConfigs as $serviceName => $serviceConfig) {
             if (strpos($serviceName, $apiName . '\\') === 0
-                && strpos($serviceName, '\V' . $api->getVersion() . '\\')) {
+                && strpos($serviceName, '\V' . $api->getVersion() . '\\')
+                && isset($serviceConfig['service_name'])
+            ) {
                 $service = $this->createService($api, $serviceConfig['service_name']);
                 if ($service) {
                     $api->addService($service);
