@@ -141,10 +141,10 @@ class ApiFactoryTest extends TestCase
 
         $this->assertEquals('Test', $api->getName());
         $this->assertEquals(1, $api->getVersion());
-        $this->assertCount(3, $api->getServices());
+        $this->assertCount(4, $api->getServices());
     }
 
-    public function testCreateService()
+    public function testCreateRestService()
     {
         $docConfig = include __DIR__ . '/TestAsset/module-config/documentation.config.php';
         $api = $this->apiFactory->createApi('Test', 1);
@@ -202,6 +202,38 @@ class ApiFactoryTest extends TestCase
                     break;
                 default:
                     $this->fail('Unexpected entity HTTP method encountered: ' . $operation->getHttpMethod());
+                    break;
+            }
+        }
+    }
+
+    public function testCreateRpcService()
+    {
+        $docConfig = include __DIR__ . '/TestAsset/module-config/documentation.config.php';
+        $api = $this->apiFactory->createApi('Test', 1);
+
+        $service = $this->apiFactory->createService($api, 'Ping');
+        $this->assertInstanceOf('ZF\Apigility\Documentation\Service', $service);
+
+        $this->assertEquals('Ping', $service->getName());
+        $this->assertEquals($docConfig['Test\V1\Rpc\Ping\Controller']['description'], $service->getDescription());
+
+        $ops = $service->getOperations();
+        $this->assertCount(1, $ops);
+
+        foreach ($ops as $operation) {
+            $this->assertInstanceOf('ZF\Apigility\Documentation\Operation', $operation);
+            $statusCodes = $operation->getResponseStatusCodes();
+            switch ($operation->getHttpMethod()) {
+                case 'GET':
+                    $this->assertEquals($docConfig['Test\V1\Rpc\Ping\Controller']['GET']['description'], $operation->getDescription());
+                    $this->assertEquals($docConfig['Test\V1\Rpc\Ping\Controller']['GET']['request'], $operation->getRequestDescription());
+                    $this->assertEquals($docConfig['Test\V1\Rpc\Ping\Controller']['GET']['response'], $operation->getResponseDescription());
+                    $this->assertFalse($operation->requiresAuthorization());
+                    $this->assertContainsStatusCodes(array('406', '415', '200'), $statusCodes);
+                    break;
+                default:
+                    $this->fail('Unexpected HTTP method encountered: ' . $operation->getHttpMethod());
                     break;
             }
         }
