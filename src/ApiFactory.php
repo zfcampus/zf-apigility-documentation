@@ -145,6 +145,7 @@ class ApiFactory
 
         foreach ($this->config['zf-rest'] as $serviceClassName => $restConfig) {
             if ((strpos($serviceClassName, $api->getName() . '\\') === 0)
+                && isset($restConfig['service_name'])
                 && ($restConfig['service_name'] === $serviceName)
                 && (strstr($serviceClassName, '\\V' . $api->getVersion() . '\\') !== false)
             ) {
@@ -158,6 +159,7 @@ class ApiFactory
         if (!$serviceData) {
             foreach ($this->config['zf-rpc'] as $serviceClassName => $rpcConfig) {
                 if ((strpos($serviceClassName, $api->getName() . '\\') === 0)
+                    && isset($rpcConfig['service_name'])
                     && ($rpcConfig['service_name'] === $serviceName)
                     && (strstr($serviceClassName, '\\V' . $api->getVersion() . '\\') !== false)
                 ) {
