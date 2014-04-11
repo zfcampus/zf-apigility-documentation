@@ -19,6 +19,10 @@ This ZF2 module can be used with conjunction with Apigility in order to:
   - documentation will be delivered in a serialized JSON structure by default
   - end-users may configure alternate/additional formats via content-negotiation
 
+This module accomplishes all the above use cases by providing an endpoint to connect
+to at (`/apigility/documentation[/:api[-v:version][/:service]]`).  The content is
+content-negotiated, with the simplest format being plain JSON.
+
 Installation
 ------------
 
@@ -57,6 +61,8 @@ Configuration
 =============
 
 ### User Configuration
+
+This module does not utilize any user configuration.
 
 ### System Configuration
 
@@ -127,23 +133,34 @@ Configuration
 ZF2 Events
 ==========
 
-### Events
-
-### Listeners
+This module has no events or listeners.
 
 ZF2 Services
 ============
 
 ### View Helpers
 
-#### `ZF\Apigility\Documentation\View\AgAcceptHeaders` (a.k.a `agacceptheaders`)
+The following list of view helpers assist in making API documentation models
+presentable in view scripts.
 
-#### `ZF\Apigility\Documentation\View\AgContentTypeHeaders`  (a.k.a `agcontenttypeheaders`)
-
-#### `ZF\Apigility\Documentation\View\AgServicePath` (a.k.a `agservicepath`)
-
-#### `ZF\Apigility\Documentation\View\AgStatusCodes` (a.k.a `agstatuscodes`)
+- `ZF\Apigility\Documentation\View\AgAcceptHeaders` (a.k.a `agacceptheaders`) for making a
+  list of accept headers, escaped for html
+- `ZF\Apigility\Documentation\View\AgContentTypeHeaders`  (a.k.a `agcontenttypeheaders`) for
+  making a list of content-type headers, escaped for html
+- `ZF\Apigility\Documentation\View\AgServicePath` (a.k.a `agservicepath`) for making a HTML
+  view representation of the route configuration of a service path
+- `ZF\Apigility\Documentation\View\AgStatusCodes` (a.k.a `agstatuscodes`) for making an
+  escaped list of status codes and their messages
 
 ### Factories
 
 #### `ZF\Apigility\Documentation\ApiFactory`
+
+The `ApiFactory` service is capable of producing an object-graph representation of the desired
+API documentation that is requested.  This object-graph will be compose the following types:
+
+- `ZF\Apigility\Documentation\Api`: the root node
+- `ZF\Apigility\Documentation\Services`: an array of services in the API (a service can be one
+  of a REST or RPC style service
+- `ZF\Apigility\Documentation\Operations`: an array of operations in the Service
+- `ZF\Apigility\Documentation\Fields`: an array of fields for a Service
