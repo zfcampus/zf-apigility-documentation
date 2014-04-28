@@ -18,6 +18,11 @@ class Controller extends AbstractActionController
     protected $apiFactory;
 
     /**
+     * @var ServerUrl
+     */
+     protected $serverUrlViewHelper;
+
+    /**
      * @param ApiFactory $apiFactory
      */
     public function __construct(ApiFactory $apiFactory, ServerUrl $serverUrlViewHelper)
