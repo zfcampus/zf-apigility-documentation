@@ -16,7 +16,7 @@ class Controller extends AbstractActionController
      * @var ApiFactory
      */
     protected $apiFactory;
-    
+
     /**
      * @var ServerUrl
      */
