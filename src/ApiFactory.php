@@ -6,7 +6,6 @@
 
 namespace ZF\Apigility\Documentation;
 
-use InvalidArgumentException;
 use Zend\ModuleManager\ModuleManager;
 use ZF\Apigility\Provider\ApigilityProviderInterface;
 use ZF\Configuration\ModuleUtils as ConfigModuleUtils;

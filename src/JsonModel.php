@@ -21,4 +21,4 @@ class JsonModel extends BaseJsonModel
                 return $this->variables['documentation']->toArray();
         }
     }
-} 
+}
