@@ -10,7 +10,7 @@ $collapseId     = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s%s', $service
     <div class="panel panel-default">
         <div class="panel-heading" data-toggle="collapse" data-parent="<?php echo $collapseParent ?>" href="#<?php echo $collapseId ?>">
             <h4 class="panel-title">
-                <span class="badge"><?php echo $this->escapeHtml($operation->getHttpMethod()) ?></span>
+                <span class="badge" style="width:70px"><?php echo $this->escapeHtml($operation->getHttpMethod()) ?></span>
                 <?php echo ($isEntity) ? $this->escapeHtml($service->getRoute()) : $this->escapeHtml($this->agServicePath($service, $operation)) ?>
             </h4>
         </div>
