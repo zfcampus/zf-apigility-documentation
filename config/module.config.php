@@ -43,12 +43,12 @@ return array(
         ),
         'selectors' => array(
             'Documentation' => array(
-                'ZF\Apigility\Documentation\JsonModel' => array(
-                    'application/json',
-                ),
                 'Zend\View\Model\ViewModel' => array(
                     'text/html',
                     'application/xhtml+xml',
+                ),
+                'ZF\Apigility\Documentation\JsonModel' => array(
+                    'application/json',
                 ),
             ),
         ),
