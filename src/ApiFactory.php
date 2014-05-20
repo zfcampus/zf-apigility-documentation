@@ -394,7 +394,7 @@ class ApiFactory
                     array_push($statusCodes, array('code' => '422', 'message' => 'Unprocessable Entity'));
                 }
                 break;
-            case 'PATCH':    
+            case 'PATCH':
             case 'PUT':
                 array_push($statusCodes, array('code' => '200', 'message' => 'OK'));
                 if ($hasOptionalSegments) {
