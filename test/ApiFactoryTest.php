@@ -19,6 +19,10 @@ class ApiFactoryTest extends TestCase
             'message' => 'OK',
         ),
         array(
+            'code' => '201',
+            'message' => 'Created',
+        ),
+        array(
             'code' => '204',
             'message' => 'No Content',
         ),
@@ -172,7 +176,7 @@ class ApiFactoryTest extends TestCase
                     break;
                 case 'POST':
                     $this->assertTrue($operation->requiresAuthorization());
-                    $this->assertContainsStatusCodes(array('406', '415', '400', '422', '401', '403', '200'), $statusCodes);
+                    $this->assertContainsStatusCodes(array('406', '415', '400', '422', '401', '403', '201'), $statusCodes);
                     break;
                 default:
                     $this->fail('Unexpected HTTP method encountered: ' . $operation->getHttpMethod());
