@@ -384,8 +384,17 @@ class ApiFactory
                     array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
                 }
                 break;
-            case 'PATCH':
             case 'POST':
+                array_push($statusCodes, array('code' => '201', 'message' => 'Created'));
+                if ($hasOptionalSegments) {
+                    array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
+                }
+                if ($hasValidation) {
+                    array_push($statusCodes, array('code' => '400', 'message' => 'Client Error'));
+                    array_push($statusCodes, array('code' => '422', 'message' => 'Unprocessable Entity'));
+                }
+                break;
+            case 'PATCH':
             case 'PUT':
                 array_push($statusCodes, array('code' => '200', 'message' => 'OK'));
                 if ($hasOptionalSegments) {
