@@ -23,6 +23,11 @@ This module accomplishes all the above use cases by providing an endpoint to con
 (`/apigility/documentation[/:api[-v:version][/:service]]`), using content-negotiation to provide
 both HTML and JSON representations.
 
+Requirements
+------------
+  
+Please see the [composer.json](composer.json) file.
+
 Installation
 ------------
 
