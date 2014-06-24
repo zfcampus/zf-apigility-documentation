@@ -43,7 +43,7 @@ class ApiFactory
         $this->config = $config;
         $this->configModuleUtils = $configModuleUtils;
     }
-    
+
     /**
      * Create list of available API modules
      *
