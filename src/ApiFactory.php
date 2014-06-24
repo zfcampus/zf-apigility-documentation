@@ -43,7 +43,7 @@ class ApiFactory
         $this->config = $config;
         $this->configModuleUtils = $configModuleUtils;
     }
-
+    
     /**
      * Create list of available API modules
      *
@@ -196,8 +196,8 @@ class ApiFactory
         if (isset($this->config['zf-content-validation'][$serviceClassName]['input_filter'])) {
             $validatorName = $this->config['zf-content-validation'][$serviceClassName]['input_filter'];
             $fields = array();
-            if (isset($this->config['input_filters'][$validatorName])) {
-                foreach ($this->config['input_filters'][$validatorName] as $fieldData) {
+            if (isset($this->config['input_filter_specs'][$validatorName])) {
+                foreach ($this->config['input_filter_specs'][$validatorName] as $fieldData) {
                     $fields[] = $field = new Field();
                     $field->setName($fieldData['name']);
                     if (isset($fieldData['description'])) {
@@ -209,7 +209,6 @@ class ApiFactory
                 $hasFields = true;
             }
         }
-
 
         $baseOperationData = (isset($serviceData['collection_http_methods']))
             ? $serviceData['collection_http_methods']
