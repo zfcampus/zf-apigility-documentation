@@ -210,7 +210,7 @@ return array(
             'input_filter' => 'Test\\V1\\Rest\\FooBar\\Validator',
         ),
     ),
-    'input_filters' => array(
+    'input_filter_specs' => array(
         'Test\\V1\\Rest\\FooBar\\Validator' => array(
             0 => array(
                 'name' => 'goober',
