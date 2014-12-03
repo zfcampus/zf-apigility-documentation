@@ -107,6 +107,8 @@ class ApiFactory
             $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rpc']);
         }
 
+
+
         foreach ($serviceConfigs as $serviceName => $serviceConfig) {
             if (strpos($serviceName, $apiName . '\\') === 0
                 && strpos($serviceName, '\V' . $api->getVersion() . '\\')
@@ -118,6 +120,8 @@ class ApiFactory
                 }
             }
         }
+
+
 
         return $api;
     }
@@ -202,6 +206,9 @@ class ApiFactory
                     $field->setName($fieldData['name']);
                     if (isset($fieldData['description'])) {
                         $field->setDescription($fieldData['description']);
+                    }
+                    if (isset($fieldData['type'])) {
+                        $field->setType($fieldData['type']);
                     }
                     $field->setRequired($fieldData['required']);
                 }
