@@ -41,7 +41,7 @@ class Controller extends AbstractActionController
      */
     public function showAction()
     {
-        $apiName = $this->params()->fromRoute('api');
+        $apiName = $this->normalizeApiName($this->params()->fromRoute('api'));
         $apiVersion = $this->params()->fromRoute('version', '1');
         $serviceName = $this->params()->fromRoute('service');
 
@@ -69,4 +69,13 @@ class Controller extends AbstractActionController
         $viewModel->setVariable('type', 'service');
         return $viewModel;
     }
+
+	/**
+	 * @param $name
+	 * @return mixed
+	 */
+	protected function normalizeApiName($name)
+	{
+		return str_replace('.', '\\', $name);
+	}
 }

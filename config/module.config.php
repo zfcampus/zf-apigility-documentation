@@ -14,7 +14,7 @@ return array(
                         'options' => array(
                             'route'    => '/documentation[/:api[-v:version][/:service]]',
                             'constraints' => array(
-                                'api' => '[a-zA-Z][a-zA-Z0-9_]+',
+                                'api' => '[a-zA-Z][a-zA-Z0-9_.]+',
                             ),
                             'defaults' => array(
                                 'controller' => 'ZF\Apigility\Documentation\Controller',

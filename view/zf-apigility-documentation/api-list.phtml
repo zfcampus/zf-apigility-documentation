@@ -19,7 +19,7 @@
                     return sprintf(
                         '<a href="%s">v%s</a>',
                         $view->url('zf-apigility/documentation', array(
-                            'api'     => $name,
+                            'api'     => str_replace('\\', '.', $name),
                             'version' => $version
                         )),
                         $view->escapeHtml($version)
