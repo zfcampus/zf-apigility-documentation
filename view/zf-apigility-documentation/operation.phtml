@@ -1,10 +1,11 @@
 <?php
-$operation      = $this->operation;
-$service        = $this->service;
-$fields         = $service->getFields();
-$isEntity       = $this->isEntity;
-$collapseParent = $this->escapeHtmlAttr(sprintf('ops-accordion-%s-%s%s', $service->getName(), $operation->getHttpMethod(), ($isEntity ? '-entity' : '')));
-$collapseId     = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s%s', $service->getName(), $operation->getHttpMethod(), ($isEntity ? '-entity' : '')));
+$operation         = $this->operation;
+$service           = $this->service;
+$generalFields     = $service->getFields('input_filter');
+$httpMethodFields  = $service->getFields($operation->getHttpMethod());
+$isEntity          = $this->isEntity;
+$collapseParent    = $this->escapeHtmlAttr(sprintf('ops-accordion-%s-%s%s', $service->getName(), $operation->getHttpMethod(), ($isEntity ? '-entity' : '')));
+$collapseId        = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s%s', $service->getName(), $operation->getHttpMethod(), ($isEntity ? '-entity' : '')));
 ?>
 <div class="panel-group" id="<?php echo $collapseParent ?>">
     <div class="panel panel-default">
@@ -19,7 +20,7 @@ $collapseId     = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s%s', $service
             <div class="panel-body">
                 <p class="text-muted"><?php echo $this->escapeHtml($operation->getDescription()) ?></p>
 
-                <?php if (! empty($fields)): ?>
+                <?php if (! empty($generalFields) ||  ! empty($httpMethodFields)): ?>
                 <h4>Fields</h4>
                 <table class="table table-striped table-bordered">
                     <thead>
@@ -30,13 +31,30 @@ $collapseId     = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s%s', $service
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($fields as $field): ?>
-                        <tr>
-                            <td><?php echo $this->escapeHtml($field->getName()) ?></td>
-                            <td><?php echo $this->escapeHtml($field->getDescription()) ?></td>
-                            <td class="center-block"><span class="badge"><?php echo ($field->isRequired()) ? 'YES' : 'NO' ?></td>
-                        </tr>
-                    <?php endforeach ?>
+                    <?php
+                    if (is_array($generalFields)):
+                        foreach ($generalFields as $field): ?>
+                            <tr>
+                                <td>ss<?php echo $this->escapeHtml($field->getName()) ?></td>
+                                <td><?php echo $this->escapeHtml($field->getDescription()) ?></td>
+                                <td class="center-block"><span class="badge"><?php echo ($field->isRequired()) ? 'YES' : 'NO' ?></td>
+                            </tr>
+                        <?php
+                        endforeach;
+                    endif;
+                    ?>
+                    <?php
+                    if (is_array($httpMethodFields)):
+                        foreach ($httpMethodFields as $field): ?>
+                            <tr>
+                                <td><?php echo $this->escapeHtml($field->getName()) ?></td>
+                                <td><?php echo $this->escapeHtml($field->getDescription()) ?></td>
+                                <td class="center-block"><span class="badge"><?php echo ($field->isRequired()) ? 'YES' : 'NO' ?></td>
+                            </tr>
+                        <?php
+                        endforeach;
+                    endif;
+                    ?>
                     </tbody>
                 </table>
                 <?php endif ?>

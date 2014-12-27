@@ -159,7 +159,7 @@ class ApiFactoryTest extends TestCase
         $this->assertEquals('FooBar', $service->getName());
         $this->assertEquals($docConfig['Test\V1\Rest\FooBar\Controller']['description'], $service->getDescription());
 
-        $fields = $service->getFields();
+        $fields = $service->getFields('input_filter');
         $this->assertCount(2, $fields);
         $this->assertInstanceOf('ZF\Apigility\Documentation\Field', $fields[0]);
 
