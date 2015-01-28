@@ -11,6 +11,9 @@ use ZF\Apigility\Documentation\ApiFactory;
 
 class ApiFactoryTest extends TestCase
 {
+    /**
+     * @var ApiFactory
+     */
     protected $apiFactory;
 
     protected $expectedStatusCodes = array(
@@ -160,8 +163,10 @@ class ApiFactoryTest extends TestCase
         $this->assertEquals($docConfig['Test\V1\Rest\FooBar\Controller']['description'], $service->getDescription());
 
         $fields = $service->getFields();
-        $this->assertCount(2, $fields);
+        $this->assertCount(4, $fields);
         $this->assertInstanceOf('ZF\Apigility\Documentation\Field', $fields[0]);
+        $this->assertEquals('foogoober/subgoober', $fields[2]->getName());
+        $this->assertEquals('foofoogoober/subgoober/subgoober', $fields[3]->getName());
 
         $ops = $service->getOperations();
         $this->assertCount(2, $ops);

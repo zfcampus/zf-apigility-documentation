@@ -197,13 +197,8 @@ class ApiFactory
             $validatorName = $this->config['zf-content-validation'][$serviceClassName]['input_filter'];
             $fields = array();
             if (isset($this->config['input_filter_specs'][$validatorName])) {
-                foreach ($this->config['input_filter_specs'][$validatorName] as $fieldData) {
-                    $fields[] = $field = new Field();
-                    $field->setName($fieldData['name']);
-                    if (isset($fieldData['description'])) {
-                        $field->setDescription($fieldData['description']);
-                    }
-                    $field->setRequired($fieldData['required']);
+                foreach ($this->mapFields($this->config['input_filter_specs'][$validatorName]) as $fieldData) {
+                    $fields[] = $this->getField($fieldData);
                 }
                 $service->setFields($fields);
                 $hasFields = true;
@@ -295,6 +290,46 @@ class ApiFactory
         }
 
         return $service;
+    }
+
+    private function mapFields($fields, $prefix = '') {
+        if (isset($fields['name'])) {
+            if ($prefix) {
+                $fields['name'] = "$prefix/{$fields['name']}";
+            }
+            return array($fields);
+        }
+
+        $flatFields = array();
+        foreach ($fields as $idx => $field) {
+            if (is_numeric($idx)) {
+                $flatFields = array_merge($flatFields, $this->mapFields($field, $prefix));
+            } elseif (isset($field['type']) && is_subclass_of($field['type'], 'Zend\InputFilter\InputFilterInterface')) {
+                $filteredFields = array_diff_key( $field, array('type' => 0) );
+                $fullindex = $prefix ? "$prefix/$idx" : $idx;
+                $flatFields = array_merge($flatFields, $this->mapFields($filteredFields, $fullindex));
+            } else {
+                $flatFields = array_merge($flatFields, $this->mapFields($field, $prefix));
+            }
+        }
+
+        return $flatFields;
+    }
+
+    /**
+     * @param array $fieldData
+     * @return Field
+     */
+    private function getField($fieldData) {
+        $field = new Field();
+
+        $field->setName($fieldData['name']);
+        if (isset($fieldData['description'])) {
+            $field->setDescription($fieldData['description']);
+        }
+        $field->setRequired($fieldData['required']);
+        return $field;
+
     }
 
     /**

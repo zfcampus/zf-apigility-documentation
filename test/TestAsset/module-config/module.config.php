@@ -225,6 +225,27 @@ return array(
                 'filters' => array(),
                 'validators' => array(),
             ),
+            'foogoober' => array(
+                'type' => 'Zend\InputFilter\InputFilter',
+                'subgoober' => array(
+                    'name' => 'subgoober',
+                    'required' => true,
+                    'filters' => array(),
+                    'validators' => array(),
+                )
+            ),
+            'foofoogoober' => array(
+                'type' => 'Zend\InputFilter\InputFilter',
+                'subgoober' => array(
+                    'type' => 'Zend\InputFilter\InputFilter',
+                    'subgoober' => array(
+                        'name' => 'subgoober',
+                        'required' => true,
+                        'filters' => array(),
+                        'validators' => array(),
+                    )
+                )
+            )
         ),
     ),
     'zf-mvc-auth' => array(
