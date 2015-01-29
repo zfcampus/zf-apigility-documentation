@@ -245,7 +245,115 @@ return array(
                         'validators' => array(),
                     )
                 )
-            )
+            ),
+            'companyDetails' => array(
+                'type' => 'Zend\\InputFilter\\InputFilter',
+                'name' => array(
+                    'name' => 'name',
+                    'required' => true,
+                    'validators' => array(
+                        0 => array(
+                            'name' => 'Zend\\Validator\\StringLength',
+                            'options' => array(
+                                'max' => 255,
+                            ),
+                        ),
+                        1 => array(
+                            'name' => 'Regex',
+                            'options' => array(
+                                'pattern' => '/^[a-zA-Z0-9àáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.\'-]+$/u',
+                                'messages' => array(
+                                    'regexNotMatch' => 'Invalid input, only Alphanumeric AND ,.\'- characters allowed',
+                                ),
+                            ),
+                        ),
+                    ),
+                    'description' => '',
+                    'allow_empty' => false,
+                    'continue_if_empty' => false,
+                ),
+                'duns' => array(
+                    'name' => 'duns',
+                    'required' => false,
+                    'validators' => array(
+                        0 => array(
+                            'name' => 'Zend\\Validator\\StringLength',
+                            'options' => array(
+                                'max' => 128,
+                            ),
+                        ),
+                        1 => array(
+                            'name' => 'Regex',
+                            'options' => array(
+                                'pattern' => '/^[0-9 ,.\'-]+$/u',
+                                'messages' => array(
+                                    'regexNotMatch' => 'Invalid input, only digits AND ,.\'- characters allowed',
+                                ),
+                            ),
+                        ),
+                    ),
+                    'allow_empty' => false,
+                    'continue_if_empty' => true,
+                ),
+                'tin' => array(
+                    'name' => 'tin',
+                    'required' => false,
+                    'validators' => array(
+                        0 => array(
+                            'name' => 'Zend\\Validator\\StringLength',
+                            'options' => array(
+                                'max' => 9
+                            ),
+                        ),
+                        1 => array(
+                            'name' => 'Regex',
+                            'options' => array(
+                                'pattern' => '/^[0-9a-zA-Z ,.\'-]+$/u',
+                                'messages' => array(
+                                    'regexNotMatch' => 'Invalid input, only digits, letters AND ,.\'- characters allowed',
+                                ),
+                            ),
+                        ),
+
+                    ),
+                    'allow_empty' => false,
+                    'continue_if_empty' => false,
+                ),
+                'website' => array(
+                    'name' => 'website',
+                    'required' => false,
+                    'validators' => array(
+                        0 => array(
+                            'name' => 'Zend\\Validator\\Uri',
+                            'options' => array(
+                                'allowRelative' => false,
+                            ),
+                        ),
+                        1 => array(
+                            'name' => 'Zend\\Validator\\StringLength',
+                            'options' => array(
+                                'max' => 255,
+                            ),
+                        ),
+                    ),
+                    'allow_empty' => false,
+                    'continue_if_empty' => false,
+                ),
+                'inceptionDate' => array(
+                    'name' => 'inceptionDate',
+                    'required' => false,
+                    'validators' => array(
+                        0 => array(
+                            'name' => 'Zend\\Validator\\Date',
+                            'options' => array(
+                                'format' => 'Y-m-d',
+                            ),
+                        ),
+                    ),
+                    'allow_empty' => false,
+                    'continue_if_empty' => false,
+                ),
+            ),
         ),
     ),
     'zf-mvc-auth' => array(

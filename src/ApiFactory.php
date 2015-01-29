@@ -294,17 +294,19 @@ class ApiFactory
 
     private function mapFields($fields, $prefix = '') {
         if (isset($fields['name'])) {
+            /// detect usage of "name" as a field group name
+            if (isset($fields['name']['name'])) {
+                return $this->mapFields($fields['name'], 'name');
+            }
             if ($prefix) {
                 $fields['name'] = "$prefix/{$fields['name']}";
             }
             return array($fields);
         }
-
         $flatFields = array();
+
         foreach ($fields as $idx => $field) {
-            if (is_numeric($idx)) {
-                $flatFields = array_merge($flatFields, $this->mapFields($field, $prefix));
-            } elseif (isset($field['type']) && is_subclass_of($field['type'], 'Zend\InputFilter\InputFilterInterface')) {
+            if (isset($field['type']) && is_subclass_of($field['type'], 'Zend\InputFilter\InputFilterInterface')) {
                 $filteredFields = array_diff_key( $field, array('type' => 0) );
                 $fullindex = $prefix ? "$prefix/$idx" : $idx;
                 $flatFields = array_merge($flatFields, $this->mapFields($filteredFields, $fullindex));
@@ -327,6 +329,12 @@ class ApiFactory
         if (isset($fieldData['description'])) {
             $field->setDescription($fieldData['description']);
         }
+        if (!isset($fieldData['required'])) {
+            print_r($fieldData);
+            exit;
+
+        }
+
         $field->setRequired($fieldData['required']);
         return $field;
 
