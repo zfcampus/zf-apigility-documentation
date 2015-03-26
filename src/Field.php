@@ -27,9 +27,9 @@ class Field implements IteratorAggregate
     protected $required = false;
 
     /**
-     * @var string
+     * @var null|string
      */
-    protected $type = 'string';
+    protected $type = null;
 
     /**
      * @param string $name
