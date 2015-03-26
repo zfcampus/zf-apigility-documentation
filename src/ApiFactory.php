@@ -197,12 +197,12 @@ class ApiFactory
             $service->setRouteIdentifierName($serviceData['route_identifier_name']);
         }
 
+        $fields = array();
         if (isset($this->config['zf-content-validation'][$serviceClassName]['input_filter'])) {
             $validatorName = $this->config['zf-content-validation'][$serviceClassName]['input_filter'];
-            $fields = array();
             if (isset($this->config['input_filter_specs'][$validatorName])) {
                 foreach ($this->config['input_filter_specs'][$validatorName] as $fieldData) {
-                    $fields[] = $field = new Field();
+                    $fields['input_filter'][] = $field = new Field();
                     $field->setName($fieldData['name']);
                     if (isset($fieldData['description'])) {
                         $field->setDescription($fieldData['description']);
@@ -212,7 +212,6 @@ class ApiFactory
                     }
                     $field->setRequired($fieldData['required']);
                 }
-                $service->setFields($fields);
                 $hasFields = true;
             }
         }
@@ -225,6 +224,21 @@ class ApiFactory
         foreach ($baseOperationData as $httpMethod) {
             $op = new Operation();
             $op->setHttpMethod($httpMethod);
+
+            if (isset($this->config['zf-content-validation'][$serviceClassName][$httpMethod])) {
+                $validatorName = $this->config['zf-content-validation'][$serviceClassName][$httpMethod];
+                if (isset($this->config['input_filter_specs'][$validatorName])) {
+                    foreach ($this->config['input_filter_specs'][$validatorName] as $fieldData) {
+                        $fields[$httpMethod][] = $field = new Field();
+                        $field->setName($fieldData['name']);
+                        if (isset($fieldData['description'])) {
+                            $field->setDescription($fieldData['description']);
+                        }
+                        $field->setRequired($fieldData['required']);
+                    }
+                    $hasFields = true;
+                }
+            }
 
             if ($isRest) {
                 $description = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['description'])
@@ -287,6 +301,8 @@ class ApiFactory
 
             $ops[] = $op;
         }
+
+        $service->setFields($fields);
         $service->setOperations($ops);
 
         if (isset($serviceData['entity_http_methods'])) {
