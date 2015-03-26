@@ -163,7 +163,11 @@ class ApiFactory
                     && (strstr($serviceClassName, '\\V' . $api->getVersion() . '\\') !== false)
                 ) {
                     $serviceData = $rpcConfig;
-                    $serviceData['action'] = $this->marshalActionFromRouteConfig($serviceName, $serviceClassName, $rpcConfig);
+                    $serviceData['action'] = $this->marshalActionFromRouteConfig(
+                        $serviceName,
+                        $serviceClassName,
+                        $rpcConfig
+                    );
                     $isRpc = true;
                     break;
                 }
@@ -203,6 +207,9 @@ class ApiFactory
                     if (isset($fieldData['description'])) {
                         $field->setDescription($fieldData['description']);
                     }
+                    if (isset($fieldData['type'])) {
+                        $field->setType($fieldData['type']);
+                    }
                     $field->setRequired($fieldData['required']);
                 }
                 $service->setFields($fields);
@@ -220,13 +227,19 @@ class ApiFactory
             $op->setHttpMethod($httpMethod);
 
             if ($isRest) {
-                $description = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['description']) ? $docsArray[$serviceClassName]['collection'][$httpMethod]['description'] : '';
+                $description = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['description'])
+                    ? $docsArray[$serviceClassName]['collection'][$httpMethod]['description']
+                    : '';
                 $op->setDescription($description);
 
-                $requestDescription = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['request']) ? $docsArray[$serviceClassName]['collection'][$httpMethod]['request'] : '';
+                $requestDescription = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['request'])
+                    ? $docsArray[$serviceClassName]['collection'][$httpMethod]['request']
+                    : '';
                 $op->setRequestDescription($requestDescription);
 
-                $responseDescription = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['response']) ? $docsArray[$serviceClassName]['collection'][$httpMethod]['response'] : '';
+                $responseDescription = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['response'])
+                    ? $docsArray[$serviceClassName]['collection'][$httpMethod]['response']
+                    : '';
 
                 $op->setResponseDescription($responseDescription);
                 $op->setRequiresAuthorization(
@@ -235,17 +248,28 @@ class ApiFactory
                     : false
                 );
 
-                $op->setResponseStatusCodes($this->getStatusCodes($httpMethod, false, $hasFields, $op->requiresAuthorization()));
+                $op->setResponseStatusCodes($this->getStatusCodes(
+                    $httpMethod,
+                    false,
+                    $hasFields,
+                    $op->requiresAuthorization()
+                ));
             }
 
             if ($isRpc) {
-                $description = isset($docsArray[$serviceClassName][$httpMethod]['description']) ? $docsArray[$serviceClassName][$httpMethod]['description'] : '';
+                $description = isset($docsArray[$serviceClassName][$httpMethod]['description'])
+                    ? $docsArray[$serviceClassName][$httpMethod]['description']
+                    : '';
                 $op->setDescription($description);
 
-                $requestDescription = isset($docsArray[$serviceClassName][$httpMethod]['request']) ? $docsArray[$serviceClassName][$httpMethod]['request'] : '';
+                $requestDescription = isset($docsArray[$serviceClassName][$httpMethod]['request'])
+                    ? $docsArray[$serviceClassName][$httpMethod]['request']
+                    : '';
                 $op->setRequestDescription($requestDescription);
 
-                $responseDescription = isset($docsArray[$serviceClassName][$httpMethod]['response']) ? $docsArray[$serviceClassName][$httpMethod]['response'] : '';
+                $responseDescription = isset($docsArray[$serviceClassName][$httpMethod]['response'])
+                    ? $docsArray[$serviceClassName][$httpMethod]['response']
+                    : '';
                 $op->setResponseDescription($responseDescription);
 
                 $op->setRequiresAuthorization(
@@ -253,7 +277,12 @@ class ApiFactory
                     ? $authorizations['actions'][$serviceData['action']][$httpMethod]
                     : false
                 );
-                $op->setResponseStatusCodes($this->getStatusCodes($httpMethod, $hasSegments, $hasFields, $op->requiresAuthorization()));
+                $op->setResponseStatusCodes($this->getStatusCodes(
+                    $httpMethod,
+                    $hasSegments,
+                    $hasFields,
+                    $op->requiresAuthorization()
+                ));
             }
 
             $ops[] = $op;
@@ -266,13 +295,19 @@ class ApiFactory
                 $op = new Operation();
                 $op->setHttpMethod($httpMethod);
 
-                $description = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['description']) ? $docsArray[$serviceClassName]['entity'][$httpMethod]['description'] : '';
+                $description = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['description'])
+                    ? $docsArray[$serviceClassName]['entity'][$httpMethod]['description']
+                    : '';
                 $op->setDescription($description);
 
-                $requestDescription = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['request']) ? $docsArray[$serviceClassName]['entity'][$httpMethod]['request'] : '';
+                $requestDescription = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['request'])
+                    ? $docsArray[$serviceClassName]['entity'][$httpMethod]['request']
+                    : '';
                 $op->setRequestDescription($requestDescription);
 
-                $responseDescription = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['response']) ? $docsArray[$serviceClassName]['entity'][$httpMethod]['response'] : '';
+                $responseDescription = isset($docsArray[$serviceClassName]['entity'][$httpMethod]['response'])
+                    ? $docsArray[$serviceClassName]['entity'][$httpMethod]['response']
+                    : '';
                 $op->setResponseDescription($responseDescription);
 
                 $op->setRequiresAuthorization(
@@ -280,18 +315,27 @@ class ApiFactory
                     ? $authorizations['entity'][$httpMethod]
                     : false
                 );
-                $op->setResponseStatusCodes($this->getStatusCodes($httpMethod, true, $hasFields, $op->requiresAuthorization()));
+                $op->setResponseStatusCodes($this->getStatusCodes(
+                    $httpMethod,
+                    true,
+                    $hasFields,
+                    $op->requiresAuthorization()
+                ));
                 $ops[] = $op;
             }
             $service->setEntityOperations($ops);
         }
 
         if (isset($this->config['zf-content-negotiation']['accept_whitelist'][$serviceClassName])) {
-            $service->setRequestAcceptTypes($this->config['zf-content-negotiation']['accept_whitelist'][$serviceClassName]);
+            $service->setRequestAcceptTypes(
+                $this->config['zf-content-negotiation']['accept_whitelist'][$serviceClassName]
+            );
         }
 
         if (isset($this->config['zf-content-negotiation']['content_type_whitelist'][$serviceClassName])) {
-            $service->setRequestContentTypes($this->config['zf-content-negotiation']['content_type_whitelist'][$serviceClassName]);
+            $service->setRequestContentTypes(
+                $this->config['zf-content-negotiation']['content_type_whitelist'][$serviceClassName]
+            );
         }
 
         return $service;
