@@ -202,7 +202,7 @@ class ApiFactory
             $validatorName = $this->config['zf-content-validation'][$serviceClassName]['input_filter'];
             if (isset($this->config['input_filter_specs'][$validatorName])) {
                 foreach ($this->mapFields($this->config['input_filter_specs'][$validatorName]) as $fieldData) {
-                    $fields[] = $this->getField($fieldData);
+                    $fields['input_filter'][] = $this->getField($fieldData);
                 }
                 $hasFields = true;
             }

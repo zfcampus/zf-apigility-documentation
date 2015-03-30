@@ -162,7 +162,7 @@ class ApiFactoryTest extends TestCase
         $this->assertEquals('FooBar', $service->getName());
         $this->assertEquals($docConfig['Test\V1\Rest\FooBar\Controller']['description'], $service->getDescription());
 
-        $fields = $service->getFields();
+        $fields = $service->getFields('input_filter');
         $this->assertCount(5, $fields);
         $this->assertInstanceOf('ZF\Apigility\Documentation\Field', $fields[0]);
         $this->assertEquals('foogoober/subgoober', $fields[2]->getName());
@@ -181,7 +181,10 @@ class ApiFactoryTest extends TestCase
                     break;
                 case 'POST':
                     $this->assertTrue($operation->requiresAuthorization());
-                    $this->assertContainsStatusCodes(array('406', '415', '400', '422', '401', '403', '201'), $statusCodes);
+                    $this->assertContainsStatusCodes(
+                        array('406', '415', '400', '422', '401', '403', '201'),
+                        $statusCodes
+                    );
                     break;
                 default:
                     $this->fail('Unexpected HTTP method encountered: ' . $operation->getHttpMethod());
@@ -203,7 +206,10 @@ class ApiFactoryTest extends TestCase
                 case 'PATCH':
                 case 'PUT':
                     $this->assertTrue($operation->requiresAuthorization());
-                    $this->assertContainsStatusCodes(array('406', '415', '400', '422', '401', '403', '200'), $statusCodes);
+                    $this->assertContainsStatusCodes(
+                        array('406', '415', '400', '422', '401', '403', '200'),
+                        $statusCodes
+                    );
                     break;
                 case 'DELETE':
                     $this->assertTrue($operation->requiresAuthorization());
@@ -235,9 +241,18 @@ class ApiFactoryTest extends TestCase
             $statusCodes = $operation->getResponseStatusCodes();
             switch ($operation->getHttpMethod()) {
                 case 'GET':
-                    $this->assertEquals($docConfig['Test\V1\Rpc\Ping\Controller']['GET']['description'], $operation->getDescription());
-                    $this->assertEquals($docConfig['Test\V1\Rpc\Ping\Controller']['GET']['request'], $operation->getRequestDescription());
-                    $this->assertEquals($docConfig['Test\V1\Rpc\Ping\Controller']['GET']['response'], $operation->getResponseDescription());
+                    $this->assertEquals(
+                        $docConfig['Test\V1\Rpc\Ping\Controller']['GET']['description'],
+                        $operation->getDescription()
+                    );
+                    $this->assertEquals(
+                        $docConfig['Test\V1\Rpc\Ping\Controller']['GET']['request'],
+                        $operation->getRequestDescription()
+                    );
+                    $this->assertEquals(
+                        $docConfig['Test\V1\Rpc\Ping\Controller']['GET']['response'],
+                        $operation->getResponseDescription()
+                    );
                     $this->assertFalse($operation->requiresAuthorization());
                     $this->assertContainsStatusCodes(array('406', '415', '200'), $statusCodes);
                     break;
