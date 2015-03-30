@@ -225,6 +225,51 @@ return array(
                 'filters' => array(),
                 'validators' => array(),
             ),
+            'foogoober' => array(
+                'type' => 'Zend\InputFilter\InputFilter',
+                'subgoober' => array(
+                    'name' => 'subgoober',
+                    'required' => true,
+                    'filters' => array(),
+                    'validators' => array(),
+                )
+            ),
+            'foofoogoober' => array(
+                'type' => 'Zend\InputFilter\InputFilter',
+                'subgoober' => array(
+                    'type' => 'Zend\InputFilter\InputFilter',
+                    'subgoober' => array(
+                        'name' => 'subgoober',
+                        'required' => true,
+                        'filters' => array(),
+                        'validators' => array(),
+                    )
+                )
+            ),
+            'companyDetails' => array(
+                'type' => 'Zend\\InputFilter\\InputFilter',
+                'name' => array(
+                    'name' => 'name',
+                    'required' => true,
+                    'validators' => array(
+                    ),
+                    'description' => '',
+                    'allow_empty' => false,
+                    'continue_if_empty' => false,
+                ),
+                'required' => array(
+                    'allow_empty' => false,
+                    'continue_if_empty' => false,
+                ),
+                'description' => array(
+                    'name' => 'website',
+                    'required' => false,
+                    'validators' => array(
+                    ),
+                    'allow_empty' => false,
+                    'continue_if_empty' => false,
+                ),
+            ),
         ),
     ),
     'zf-mvc-auth' => array(
