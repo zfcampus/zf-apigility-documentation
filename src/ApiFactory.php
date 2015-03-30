@@ -201,16 +201,8 @@ class ApiFactory
         if (isset($this->config['zf-content-validation'][$serviceClassName]['input_filter'])) {
             $validatorName = $this->config['zf-content-validation'][$serviceClassName]['input_filter'];
             if (isset($this->config['input_filter_specs'][$validatorName])) {
-                foreach ($this->config['input_filter_specs'][$validatorName] as $fieldData) {
-                    $fields['input_filter'][] = $field = new Field();
-                    $field->setName($fieldData['name']);
-                    if (isset($fieldData['description'])) {
-                        $field->setDescription($fieldData['description']);
-                    }
-                    if (isset($fieldData['type'])) {
-                        $field->setType($fieldData['type']);
-                    }
-                    $field->setRequired($fieldData['required']);
+                foreach ($this->mapFields($this->config['input_filter_specs'][$validatorName]) as $fieldData) {
+                    $fields['input_filter'][] = $this->getField($fieldData);
                 }
                 $hasFields = true;
             }
@@ -355,6 +347,61 @@ class ApiFactory
         }
 
         return $service;
+    }
+
+    /**
+     * @param array $fields
+     * @param string $prefix To unwind nesting of fields
+     * @return array
+     */
+    private function mapFields($fields, $prefix = '')
+    {
+        if (isset($fields['name'])) {
+            /// detect usage of "name" as a field group name
+            if (isset($fields['name']['name'])) {
+                return $this->mapFields($fields['name'], 'name');
+            }
+            if ($prefix) {
+                $fields['name'] = "$prefix/{$fields['name']}";
+            }
+            return array($fields);
+        }
+
+        $flatFields = array();
+
+        foreach ($fields as $idx => $field) {
+            if (isset($field['type']) && is_subclass_of($field['type'], 'Zend\InputFilter\InputFilterInterface')) {
+                $filteredFields = array_diff_key($field, array('type' => 0));
+                $fullindex = $prefix ? "$prefix/$idx" : $idx;
+                $flatFields = array_merge($flatFields, $this->mapFields($filteredFields, $fullindex));
+            } else {
+                $flatFields = array_merge($flatFields, $this->mapFields($field, $prefix));
+            }
+        }
+
+        return $flatFields;
+    }
+
+    /**
+     * @param array $fieldData
+     * @return Field
+     */
+    private function getField($fieldData)
+    {
+        $field = new Field();
+
+        $field->setName($fieldData['name']);
+        if (isset($fieldData['description'])) {
+            $field->setDescription($fieldData['description']);
+        }
+
+        if (isset($fieldData['type'])) {
+            $field->setType($fieldData['type']);
+        }
+
+        $required = isset($fieldData['required']) ? (bool) $fieldData['required'] : false;
+        $field->setRequired($required);
+        return $field;
     }
 
     /**
