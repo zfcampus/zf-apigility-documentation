@@ -354,15 +354,16 @@ class ApiFactory
      * @param string $prefix To unwind nesting of fields
      * @return array
      */
-    private function mapFields($fields, $prefix = '')
+    private function mapFields(array $fields, $prefix = '')
     {
         if (isset($fields['name'])) {
             /// detect usage of "name" as a field group name
-            if (isset($fields['name']['name'])) {
+            if (is_array($fields['name']) && isset($fields['name']['name'])) {
                 return $this->mapFields($fields['name'], 'name');
             }
+
             if ($prefix) {
-                $fields['name'] = "$prefix/{$fields['name']}";
+                $fields['name'] = sprintf('%s/%s', $prefix, $fields['name']);
             }
             return array($fields);
         }
@@ -372,11 +373,12 @@ class ApiFactory
         foreach ($fields as $idx => $field) {
             if (isset($field['type']) && is_subclass_of($field['type'], 'Zend\InputFilter\InputFilterInterface')) {
                 $filteredFields = array_diff_key($field, array('type' => 0));
-                $fullindex = $prefix ? "$prefix/$idx" : $idx;
+                $fullindex = $prefix ? sprintf('%s/%s', $prefix, $idx) : $idx;
                 $flatFields = array_merge($flatFields, $this->mapFields($filteredFields, $fullindex));
-            } else {
-                $flatFields = array_merge($flatFields, $this->mapFields($field, $prefix));
+                continue;
             }
+
+            $flatFields = array_merge($flatFields, $this->mapFields($field, $prefix));
         }
 
         return $flatFields;
@@ -386,7 +388,7 @@ class ApiFactory
      * @param array $fieldData
      * @return Field
      */
-    private function getField($fieldData)
+    private function getField(array $fieldData)
     {
         $field = new Field();
 
@@ -401,6 +403,7 @@ class ApiFactory
 
         $required = isset($fieldData['required']) ? (bool) $fieldData['required'] : false;
         $field->setRequired($required);
+
         return $field;
     }
 
