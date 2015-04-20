@@ -239,7 +239,7 @@ class Service implements IteratorAggregate
      */
     public function getFields($type)
     {
-        return $this->fields[$type];
+        return isset($this->fields[$type]) ? $this->fields[$type] : array();
     }
 
     /**
@@ -260,15 +260,22 @@ class Service implements IteratorAggregate
         );
 
         $fields = array();
-        foreach ($this->fields['input_filter'] as $field) {
-            $fields['input_filter'][$field->getName()] = $field->toArray();
+        if (isset($this->fields['input_filter'])) {
+            foreach ($this->fields['input_filter'] as $field) {
+                $fields['input_filter'][$field->getName()] = $field->toArray();
+            }
         }
+
         $operations = array();
         foreach ($this->operations as $op) {
             $method = $op->getHttpMethod();
-            foreach ($this->fields[$method] as $field) {
-                $fields[$method][$field->getName()] = $field->toArray();
+
+            if (isset($this->fields[$method])) {
+                foreach ($this->fields[$method] as $field) {
+                    $fields[$method][$field->getName()] = $field->toArray();
+                }
             }
+
             $operations[$method] = $op->toArray();
         }
         $output['fields'] = $fields;
