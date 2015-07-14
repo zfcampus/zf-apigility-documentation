@@ -25,27 +25,31 @@
     },
     "require": {
         "php": ">=5.3.23",
-        "zendframework/zend-modulemanager": "~2.3",
-        "zendframework/zend-mvc": "~2.3",
-        "zendframework/zend-servicemanager": "~2.3",
-        "zendframework/zend-view": "~2.3",
+        "zendframework/zend-modulemanager": ">=2.3,<2.5",
+        "zendframework/zend-mvc": ">=2.3,<2.5",
+        "zendframework/zend-servicemanager": ">=2.3,<2.5",
+        "zendframework/zend-view": ">=2.3,<2.5",
         "zfcampus/zf-apigility-provider": "~1.0",
         "zfcampus/zf-configuration": "~1.0",
         "zfcampus/zf-content-negotiation": "~1.0"
     },
     "require-dev": {
-        "fabpot/php-cs-fixer": "*@dev",
-        "phpunit/PHPUnit": "3.7.*",
-        "zendframework/zend-loader": "~2.3",
-        "zendframework/zend-stdlib": "~2.3"
+        "phpunit/phpunit": "~4.7",
+        "squizlabs/php_codesniffer": "^2.3",
+        "zendframework/zend-loader": ">=2.3,<2.5",
+        "zendframework/zend-stdlib": ">=2.3,<2.5"
     },
     "autoload": {
         "psr-4": {
-            "ZF\\Apigility\\Documentation\\": "src/",
-            "ZFTest\\Apigility\\Documentation\\": "test/"
+            "ZF\\Apigility\\Documentation\\": "src/"
         },
         "classmap": [
             "Module.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZFTest\\Apigility\\Documentation\\": "test/"
+        }
     }
 }
