@@ -102,11 +102,11 @@ class Field implements IteratorAggregate
      */
     public function toArray()
     {
-        return array(
+        return [
             'description' => $this->description,
             'required' => $this->required,
             'type' => $this->type,
-        );
+        ];
     }
 
     /**

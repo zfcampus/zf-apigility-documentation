@@ -43,7 +43,7 @@ class Operation implements IteratorAggregate
      *
      * @var array
      */
-    protected $responseStatusCodes = array();
+    protected $responseStatusCodes = [];
 
     /**
      * @param string $httpMethod
@@ -148,13 +148,13 @@ class Operation implements IteratorAggregate
      */
     public function toArray()
     {
-        return array(
+        return [
             'description' => $this->description,
             'request' => $this->requestDescription,
             'requires_authorization' => $this->requiresAuthorization,
             'response' => $this->responseDescription,
             'response_status_codes' => $this->responseStatusCodes,
-        );
+        ];
     }
 
     /**

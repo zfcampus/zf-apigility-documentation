@@ -64,7 +64,7 @@ class Service implements IteratorAggregate
     /**
      * @var Field[]
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * @param \ZF\Apigility\Documentation\Api $api
@@ -239,7 +239,7 @@ class Service implements IteratorAggregate
      */
     public function getFields($type)
     {
-        return isset($this->fields[$type]) ? $this->fields[$type] : array();
+        return isset($this->fields[$type]) ? $this->fields[$type] : [];
     }
 
     /**
@@ -249,7 +249,7 @@ class Service implements IteratorAggregate
      */
     public function toArray()
     {
-        $output = array(
+        $output = [
             'name' => $this->name,
             'description' => $this->description,
             'route' => $this->route,
@@ -257,16 +257,16 @@ class Service implements IteratorAggregate
             'request_accept_types' => $this->requestAcceptTypes,
             'request_content_types' => $this->requestContentTypes,
             'response_content_types' => $this->requestAcceptTypes,
-        );
+        ];
 
-        $fields = array();
+        $fields = [];
         if (isset($this->fields['input_filter'])) {
             foreach ($this->fields['input_filter'] as $field) {
                 $fields['input_filter'][$field->getName()] = $field->toArray();
             }
         }
 
-        $operations = array();
+        $operations = [];
         foreach ($this->operations as $op) {
             $method = $op->getHttpMethod();
 
@@ -282,7 +282,7 @@ class Service implements IteratorAggregate
         $output['operations'] = $operations;
 
         if ($this->entityOperations) {
-            $entityOperations = array();
+            $entityOperations = [];
             foreach ($this->entityOperations as $op) {
                 $entityOperations[$op->getHttpMethod()] = $op->toArray();
             }
