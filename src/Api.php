@@ -31,7 +31,7 @@ class Api implements IteratorAggregate
     /**
      * @var Service[]
      */
-    protected $services = array();
+    protected $services = [];
 
     /**
      * @param string $name
@@ -104,11 +104,11 @@ class Api implements IteratorAggregate
      */
     public function toArray()
     {
-        $array = array(
+        $array = [
             'name'     => $this->name,
             'version'  => $this->version,
-            'services' => array()
-        );
+            'services' => []
+        ];
         foreach ($this->services as $i => $service) {
             $array['services'][$i] = $service->toArray();
         }

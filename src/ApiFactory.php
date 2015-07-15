@@ -30,7 +30,7 @@ class ApiFactory
     /**
      * @var array
      */
-    protected $docs = array();
+    protected $docs = [];
 
     /**
      * @param ModuleManager $moduleManager
@@ -51,14 +51,14 @@ class ApiFactory
      */
     public function createApiList()
     {
-        $apigilityModules = array();
+        $apigilityModules = [];
         $q = preg_quote('\\');
         foreach ($this->moduleManager->getModules() as $moduleName) {
             $module = $this->moduleManager->getModule($moduleName);
             if ($module instanceof ApigilityProviderInterface) {
                 $versionRegex = '#' . preg_quote($moduleName) . $q . 'V(?P<version>[^' . $q . ']+)' . $q . '#';
-                $versions = array();
-                $serviceConfigs = array();
+                $versions = [];
+                $serviceConfigs = [];
                 if ($this->config['zf-rest']) {
                     $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rest']);
                 }
@@ -76,10 +76,10 @@ class ApiFactory
                     }
                 }
 
-                $apigilityModules[] = array(
+                $apigilityModules[] = [
                     'name'     => $moduleName,
                     'versions' => $versions,
-                );
+                ];
             }
         }
         return $apigilityModules;
@@ -99,7 +99,7 @@ class ApiFactory
         $api->setVersion($apiVersion);
         $api->setName($apiName);
 
-        $serviceConfigs = array();
+        $serviceConfigs = [];
         if ($this->config['zf-rest']) {
             $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rest']);
         }
@@ -197,7 +197,7 @@ class ApiFactory
             $service->setRouteIdentifierName($serviceData['route_identifier_name']);
         }
 
-        $fields = array();
+        $fields = [];
         if (isset($this->config['zf-content-validation'][$serviceClassName]['input_filter'])) {
             $validatorName = $this->config['zf-content-validation'][$serviceClassName]['input_filter'];
             if (isset($this->config['input_filter_specs'][$validatorName])) {
@@ -212,7 +212,7 @@ class ApiFactory
             ? $serviceData['collection_http_methods']
             : $serviceData['http_methods'];
 
-        $ops = array();
+        $ops = [];
         foreach ($baseOperationData as $httpMethod) {
             $op = new Operation();
             $op->setHttpMethod($httpMethod);
@@ -298,7 +298,7 @@ class ApiFactory
         $service->setOperations($ops);
 
         if (isset($serviceData['entity_http_methods'])) {
-            $ops = array();
+            $ops = [];
             foreach ($serviceData['entity_http_methods'] as $httpMethod) {
                 $op = new Operation();
                 $op->setHttpMethod($httpMethod);
@@ -365,14 +365,14 @@ class ApiFactory
             if ($prefix) {
                 $fields['name'] = sprintf('%s/%s', $prefix, $fields['name']);
             }
-            return array($fields);
+            return [$fields];
         }
 
-        $flatFields = array();
+        $flatFields = [];
 
         foreach ($fields as $idx => $field) {
             if (isset($field['type']) && is_subclass_of($field['type'], 'Zend\InputFilter\InputFilterInterface')) {
-                $filteredFields = array_diff_key($field, array('type' => 0));
+                $filteredFields = array_diff_key($field, ['type' => 0]);
                 $fullindex = $prefix ? sprintf('%s/%s', $prefix, $idx) : $idx;
                 $flatFields = array_merge($flatFields, $this->mapFields($filteredFields, $fullindex));
                 continue;
@@ -424,7 +424,7 @@ class ApiFactory
         if (file_exists($docConfigPath)) {
             $this->docs[$apiName] = include $docConfigPath;
         } else {
-            $this->docs[$apiName] = array();
+            $this->docs[$apiName] = [];
         }
 
         return $this->docs[$apiName];
@@ -439,7 +439,7 @@ class ApiFactory
     protected function getAuthorizations($serviceName)
     {
         if (! isset($this->config['zf-mvc-auth']['authorization'][$serviceName])) {
-            return array();
+            return [];
         }
         return $this->config['zf-mvc-auth']['authorization'][$serviceName];
     }
@@ -475,50 +475,50 @@ class ApiFactory
 
     protected function getStatusCodes($httpMethod, $hasOptionalSegments, $hasValidation, $requiresAuthorization)
     {
-        $statusCodes = array(
-            array('code' => '406', 'message' => 'Not Acceptable'),
-            array('code' => '415', 'message' => 'Unsupported Media Type'),
-        );
+        $statusCodes = [
+            ['code' => '406', 'message' => 'Not Acceptable'],
+            ['code' => '415', 'message' => 'Unsupported Media Type'],
+        ];
 
         switch ($httpMethod) {
             case 'GET':
-                array_push($statusCodes, array('code' => '200', 'message' => 'OK'));
+                array_push($statusCodes, ['code' => '200', 'message' => 'OK']);
                 if ($hasOptionalSegments) {
-                    array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
+                    array_push($statusCodes, ['code' => '404', 'message' => 'Not Found']);
                 }
                 break;
             case 'DELETE':
-                array_push($statusCodes, array('code' => '204', 'message' => 'No Content'));
+                array_push($statusCodes, ['code' => '204', 'message' => 'No Content']);
                 if ($hasOptionalSegments) {
-                    array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
+                    array_push($statusCodes, ['code' => '404', 'message' => 'Not Found']);
                 }
                 break;
             case 'POST':
-                array_push($statusCodes, array('code' => '201', 'message' => 'Created'));
+                array_push($statusCodes, ['code' => '201', 'message' => 'Created']);
                 if ($hasOptionalSegments) {
-                    array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
+                    array_push($statusCodes, ['code' => '404', 'message' => 'Not Found']);
                 }
                 if ($hasValidation) {
-                    array_push($statusCodes, array('code' => '400', 'message' => 'Client Error'));
-                    array_push($statusCodes, array('code' => '422', 'message' => 'Unprocessable Entity'));
+                    array_push($statusCodes, ['code' => '400', 'message' => 'Client Error']);
+                    array_push($statusCodes, ['code' => '422', 'message' => 'Unprocessable Entity']);
                 }
                 break;
             case 'PATCH':
             case 'PUT':
-                array_push($statusCodes, array('code' => '200', 'message' => 'OK'));
+                array_push($statusCodes, ['code' => '200', 'message' => 'OK']);
                 if ($hasOptionalSegments) {
-                    array_push($statusCodes, array('code' => '404', 'message' => 'Not Found'));
+                    array_push($statusCodes, ['code' => '404', 'message' => 'Not Found']);
                 }
                 if ($hasValidation) {
-                    array_push($statusCodes, array('code' => '400', 'message' => 'Client Error'));
-                    array_push($statusCodes, array('code' => '422', 'message' => 'Unprocessable Entity'));
+                    array_push($statusCodes, ['code' => '400', 'message' => 'Client Error']);
+                    array_push($statusCodes, ['code' => '422', 'message' => 'Unprocessable Entity']);
                 }
                 break;
         }
 
         if ($requiresAuthorization) {
-            array_push($statusCodes, array('code' => '401', 'message' => 'Unauthorized'));
-            array_push($statusCodes, array('code' => '403', 'message' => 'Forbidden'));
+            array_push($statusCodes, ['code' => '401', 'message' => 'Unauthorized']);
+            array_push($statusCodes, ['code' => '403', 'message' => 'Forbidden']);
         }
 
         return $statusCodes;

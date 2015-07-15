@@ -16,48 +16,48 @@ class ApiFactoryTest extends TestCase
      */
     protected $apiFactory;
 
-    protected $expectedStatusCodes = array(
-        array(
+    protected $expectedStatusCodes = [
+        [
             'code' => '200',
             'message' => 'OK',
-        ),
-        array(
+        ],
+        [
             'code' => '201',
             'message' => 'Created',
-        ),
-        array(
+        ],
+        [
             'code' => '204',
             'message' => 'No Content',
-        ),
-        array(
+        ],
+        [
             'code' => '400',
             'message' => 'Client Error',
-        ),
-        array(
+        ],
+        [
             'code' => '401',
             'message' => 'Unauthorized',
-        ),
-        array(
+        ],
+        [
             'code' => '403',
             'message' => 'Forbidden',
-        ),
-        array(
+        ],
+        [
             'code' => '404',
             'message' => 'Not Found',
-        ),
-        array(
+        ],
+        [
             'code' => '406',
             'message' => 'Not Acceptable',
-        ),
-        array(
+        ],
+        [
             'code' => '415',
             'message' => 'Unsupported Media Type',
-        ),
-        array(
+        ],
+        [
             'code' => '422',
             'message' => 'Unprocessable Entity',
-        ),
-    );
+        ],
+    ];
 
     public function setup()
     {
@@ -65,18 +65,18 @@ class ApiFactoryTest extends TestCase
 
         $moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
             ->disableOriginalConstructor()
-            ->setMethods(array('getModules', 'getModule'))
+            ->setMethods(['getModules', 'getModule'])
             ->getMock();
         $moduleManager->expects($this->any())
             ->method('getModules')
-            ->will($this->returnValue(array('Test')));
+            ->will($this->returnValue(['Test']));
         $moduleManager->expects($this->any())
             ->method('getModule')
             ->will($this->returnValue($mockModule));
 
         $moduleUtils = $this->getMockBuilder('ZF\Configuration\ModuleUtils')
             ->disableOriginalConstructor()
-            ->setMethods(array('getModuleConfigPath'))
+            ->setMethods(['getModuleConfigPath'])
             ->getMock();
         $moduleUtils->expects($this->any())
             ->method('getModuleConfigPath')
@@ -92,7 +92,7 @@ class ApiFactoryTest extends TestCase
     public function assertContainsStatusCodes($expectedCodes, $actualCodes, $message = '')
     {
         if (!is_array($expectedCodes)) {
-            $expectedCodes = array($expectedCodes);
+            $expectedCodes = [$expectedCodes];
         }
 
         $expectedCodePairs = array_filter($this->expectedStatusCodes, function ($code) use ($expectedCodes) {
@@ -138,7 +138,7 @@ class ApiFactoryTest extends TestCase
         $this->assertEquals('Test', $api['name']);
         $this->assertArrayHasKey('versions', $api);
         $this->assertInternalType('array', $api['versions']);
-        $this->assertEquals(array('1'), $api['versions']);
+        $this->assertEquals(['1'], $api['versions']);
     }
 
     public function testCreateApi()
@@ -177,12 +177,12 @@ class ApiFactoryTest extends TestCase
             switch ($operation->getHttpMethod()) {
                 case 'GET':
                     $this->assertFalse($operation->requiresAuthorization());
-                    $this->assertContainsStatusCodes(array('406', '415', '200'), $statusCodes);
+                    $this->assertContainsStatusCodes(['406', '415', '200'], $statusCodes);
                     break;
                 case 'POST':
                     $this->assertTrue($operation->requiresAuthorization());
                     $this->assertContainsStatusCodes(
-                        array('406', '415', '400', '422', '401', '403', '201'),
+                        ['406', '415', '400', '422', '401', '403', '201'],
                         $statusCodes
                     );
                     break;
@@ -201,19 +201,19 @@ class ApiFactoryTest extends TestCase
             switch ($operation->getHttpMethod()) {
                 case 'GET':
                     $this->assertFalse($operation->requiresAuthorization());
-                    $this->assertContainsStatusCodes(array('406', '415', '404', '200'), $statusCodes);
+                    $this->assertContainsStatusCodes(['406', '415', '404', '200'], $statusCodes);
                     break;
                 case 'PATCH':
                 case 'PUT':
                     $this->assertTrue($operation->requiresAuthorization());
                     $this->assertContainsStatusCodes(
-                        array('406', '415', '400', '422', '401', '403', '200'),
+                        ['406', '415', '400', '422', '401', '403', '200'],
                         $statusCodes
                     );
                     break;
                 case 'DELETE':
                     $this->assertTrue($operation->requiresAuthorization());
-                    $this->assertContainsStatusCodes(array('406', '415', '401', '403', '204'), $statusCodes);
+                    $this->assertContainsStatusCodes(['406', '415', '401', '403', '204'], $statusCodes);
                     break;
                 default:
                     $this->fail('Unexpected entity HTTP method encountered: ' . $operation->getHttpMethod());
@@ -254,7 +254,7 @@ class ApiFactoryTest extends TestCase
                         $operation->getResponseDescription()
                     );
                     $this->assertFalse($operation->requiresAuthorization());
-                    $this->assertContainsStatusCodes(array('406', '415', '200'), $statusCodes);
+                    $this->assertContainsStatusCodes(['406', '415', '200'], $statusCodes);
                     break;
                 default:
                     $this->fail('Unexpected HTTP method encountered: ' . $operation->getHttpMethod());
