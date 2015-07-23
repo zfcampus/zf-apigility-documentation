@@ -126,8 +126,7 @@ class ApiFactory
      * Create documentation details for a given service in a given version of
      * an API module
      *
-     * @param string $apiName
-     * @param int|string $apiVersion
+     * @param Api $api
      * @param string $serviceName
      * @return Service
      */
