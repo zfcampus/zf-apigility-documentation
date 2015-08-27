@@ -11,9 +11,9 @@ use \Michelf\Markdown;
 use Zend\View\Helper\AbstractHelper;
 
 /**
- * View helper used to transform a raw Apigility description into a specific format (only Markdown is currently 
- * supported). 
- * 
+ * View helper used to transform a raw Apigility description into a specific format (only Markdown is currently
+ * supported).
+ *
  * @see https://github.com/michelf/php-markdown
  */
 class AgTransformDescription extends AbstractHelper
@@ -26,6 +26,6 @@ class AgTransformDescription extends AbstractHelper
      */
     public function __invoke($description)
     {
-    	return Markdown::defaultTransform($description);
+        return Markdown::defaultTransform($description);
     }
 }

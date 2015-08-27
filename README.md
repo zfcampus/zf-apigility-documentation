@@ -158,6 +158,8 @@ scripts.
   view representation of the route configuration of a service path.
 - `ZF\Apigility\Documentation\View\AgStatusCodes` (a.k.a `agStatusCodes`) for making an
   escaped list of status codes and their messages.
+- `ZF\Apigility\Documentation\View\AgTransformDescription` (a.k.a `agTransformDescription`) for transforming the written 
+  descriptions into Markdown.
 
 ### Factories
 
