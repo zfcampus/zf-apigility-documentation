@@ -6,7 +6,7 @@
 
 namespace ZF\Apigility\Documentation\View;
 
-use \Michelf\Markdown;
+use \Michelf\MarkdownExtra;
 
 use Zend\View\Helper\AbstractHelper;
 
@@ -26,6 +26,6 @@ class AgTransformDescription extends AbstractHelper
      */
     public function __invoke($description)
     {
-        return Markdown::defaultTransform($description);
+        return MarkdownExtra::defaultTransform($description);
     }
 }
