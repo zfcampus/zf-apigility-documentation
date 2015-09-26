@@ -401,6 +401,10 @@ class ApiFactory
             $field->setType($fieldData['type']);
         }
 
+        if (isset($fieldData['field_type'])) {
+            $field->setFieldType($fieldData['field_type']);
+        }
+
         $required = isset($fieldData['required']) ? (bool) $fieldData['required'] : false;
         $field->setRequired($required);
 
