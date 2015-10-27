@@ -16,6 +16,15 @@ return array(
                     ),
                 ),
             ),
+            'test.rest.foo-bar-collection' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/foo-bar-collection[/:foo_bar_collection_id]',
+                    'defaults' => array(
+                        'controller' => 'Test\\V1\\Rest\\FooBarCollection\\Controller',
+                    ),
+                ),
+            ),
             'test.rest.boo-baz' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -53,11 +62,13 @@ return array(
             1 => 'test.rest.boo-baz',
             2 => 'test.rpc.my-rpc',
             3 => 'test.rpc.ping',
+            4 => 'test.rest.foo-bar-collection',
         ),
     ),
     'service_manager' => array(
         'invokables' => array(
             'Test\\V1\\Rest\\FooBar\\FooBarResource' => 'Test\\V1\\Rest\\FooBar\\FooBarResource',
+            'Test\\V1\\Rest\\FooBarCollection\\FooBarResource' => 'Test\\V1\\Rest\\FooBarCollection\\FooBarResource',
             'Test\\V1\\Rest\\BooBaz\\BooBazResource' => 'Test\\V1\\Rest\\BooBaz\\BooBazResource',
         ),
     ),
@@ -83,6 +94,28 @@ return array(
             'entity_class' => 'Test\\V1\\Rest\\FooBar\\FooBarEntity',
             'collection_class' => 'Test\\V1\\Rest\\FooBar\\FooBarCollection',
             'service_name' => 'FooBar',
+        ),
+        'Test\\V1\\Rest\\FooBarCollection\\Controller' => array(
+            'listener' => 'Test\\V1\\Rest\\FooBarCollection\\FooBarResource',
+            'route_name' => 'test.rest.foo-bar-collection',
+            'route_identifier_name' => 'foo_bar_collectio_id',
+            'collection_name' => 'foo_bar_collection',
+            'entity_http_methods' => array(
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ),
+            'collection_http_methods' => array(
+                0 => 'GET',
+                1 => 'POST',
+            ),
+            'collection_query_whitelist' => array(),
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => 'Test\\V1\\Rest\\FooBarCollection\\FooBarEntity',
+            'collection_class' => 'Test\\V1\\Rest\\FooBarCollection\\FooBarCollection',
+            'service_name' => 'FooBarCollection',
         ),
         'Test\\V1\\Rest\\BooBaz\\Controller' => array(
             'listener' => 'Test\\V1\\Rest\\BooBaz\\BooBazResource',
@@ -110,12 +143,18 @@ return array(
     'zf-content-negotiation' => array(
         'controllers' => array(
             'Test\\V1\\Rest\\FooBar\\Controller' => 'HalJson',
+            'Test\\V1\\Rest\\FooBarCollection\\Controller' => 'HalJson',
             'Test\\V1\\Rest\\BooBaz\\Controller' => 'HalJson',
             'Test\\V1\\Rpc\\MyRpc\\Controller' => 'Json',
             'Test\\V1\\Rpc\\Ping\\Controller' => 'Json',
         ),
         'accept_whitelist' => array(
             'Test\\V1\\Rest\\FooBar\\Controller' => array(
+                0 => 'application/vnd.test.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ),
+            'Test\\V1\\Rest\\FooBarCollection\\Controller' => array(
                 0 => 'application/vnd.test.v1+json',
                 1 => 'application/hal+json',
                 2 => 'application/json',
@@ -138,6 +177,10 @@ return array(
         ),
         'content_type_whitelist' => array(
             'Test\\V1\\Rest\\FooBar\\Controller' => array(
+                0 => 'application/vnd.test.v1+json',
+                1 => 'application/json',
+            ),
+            'Test\\V1\\Rest\\FooBarCollection\\Controller' => array(
                 0 => 'application/vnd.test.v1+json',
                 1 => 'application/json',
             ),
@@ -209,6 +252,9 @@ return array(
         'Test\\V1\\Rest\\FooBar\\Controller' => array(
             'input_filter' => 'Test\\V1\\Rest\\FooBar\\Validator',
         ),
+        'Test\\V1\\Rest\\FooBarCollection\\Controller' => array(
+            'input_filter' => 'Test\\V1\\Rest\\FooBarCollection\\Validator',
+        ),
     ),
     'input_filter_specs' => array(
         'Test\\V1\\Rest\\FooBar\\Validator' => array(
@@ -271,6 +317,32 @@ return array(
                 ),
             ),
         ),
+        'Test\\V1\\Rest\\FooBarCollection\\Validator' => array(
+            'FooBarCollection' => array(
+                'type' => Zend\InputFilter\CollectionInputFilter::class,
+                'required' => true,
+                'count' => 1,
+                'input_filter' => array(
+                    'type' => Zend\InputFilter\InputFilter::class,
+                    'name' => 'FooBar',
+                    'required' => true,
+                    'filters' => array(),
+                    'validators' => array(),
+                ),
+            ),
+            'AnotherCollection' => array(
+                'type' => 'Zend\\InputFilter\\CollectionInputFilter',
+                'required' => true,
+                'count' => 1,
+                'input_filter' => array(
+                    'type' => Zend\InputFilter\InputFilter::class,
+                    'name' => 'FooBar',
+                    'required' => true,
+                    'filters' => array(),
+                    'validators' => array(),
+                ),
+            ),
+        ),
     ),
     'zf-mvc-auth' => array(
         'authentication' => array(
@@ -281,6 +353,22 @@ return array(
         ),
         'authorization' => array(
             'Test\V1\Rest\FooBar\Controller' => array(
+                'entity' => array(
+                    'DELETE' => true,
+                    'GET'    => false,
+                    'PATCH'  => true,
+                    'POST'   => false,
+                    'PUT'    => true,
+                ),
+                'collection' => array(
+                    'DELETE' => false,
+                    'GET'    => false,
+                    'PATCH'  => false,
+                    'POST'   => true,
+                    'PUT'    => false,
+                ),
+            ),
+            'Test\V1\Rest\FooBarCollection\Controller' => array(
                 'entity' => array(
                     'DELETE' => true,
                     'GET'    => false,

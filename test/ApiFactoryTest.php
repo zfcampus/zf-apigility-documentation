@@ -148,7 +148,7 @@ class ApiFactoryTest extends TestCase
 
         $this->assertEquals('Test', $api->getName());
         $this->assertEquals(1, $api->getVersion());
-        $this->assertCount(4, $api->getServices());
+        $this->assertCount(5, $api->getServices());
     }
 
     public function testCreateRestService()
@@ -220,6 +220,27 @@ class ApiFactoryTest extends TestCase
                     break;
             }
         }
+    }
+
+    public function testCreateRestServiceWithCollection()
+    {
+        $docConfig = include __DIR__ . '/TestAsset/module-config/documentation.config.php';
+        $api = $this->apiFactory->createApi('Test', 1);
+
+        $service = $this->apiFactory->createService($api, 'FooBarCollection');
+        $this->assertInstanceOf('ZF\Apigility\Documentation\Service', $service);
+
+        $this->assertEquals('FooBarCollection', $service->getName());
+        $this->assertEquals(
+            $docConfig['Test\V1\Rest\FooBarCollection\Controller']['description'],
+            $service->getDescription()
+        );
+
+        $fields = $service->getFields('input_filter');
+        $this->assertCount(2, $fields);
+
+        $this->assertSame('FooBarCollection[]/FooBar', $fields[0]->getName());
+        $this->assertSame('AnotherCollection[]/FooBar', $fields[1]->getName());
     }
 
     public function testCreateRpcService()
