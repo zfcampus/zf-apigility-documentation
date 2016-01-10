@@ -33,26 +33,23 @@ $collapseId        = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s%s', $serv
                     </thead>
                     <tbody>
                     <?php
-                    if (is_array($generalFields)):
-                        foreach ($generalFields as $field): ?>
-                            <tr>
-                                <td><?php echo $this->escapeHtml($field->getName()) ?></td>
-                                <td><?php echo $this->escapeHtml($field->getType() ?: '') ?></td>
-                                <td><?php echo $this->escapeHtml($field->getDescription()) ?></td>
-                                <td class="center-block"><span class="badge"><?php echo ($field->isRequired()) ? 'YES' : 'NO' ?></td>
-                            </tr>
-                        <?php
-                        endforeach;
-                    endif;
-                    ?>
-                    <?php
-                    if (is_array($httpMethodFields)):
+                    if (!empty($httpMethodFields)):
                         foreach ($httpMethodFields as $field): ?>
                             <tr>
                                 <td><?php echo $this->escapeHtml($field->getName()) ?></td>
                                 <td><?php echo $this->escapeHtml($field->getType() ?: '') ?></td>
                                 <td><?php echo $this->escapeHtml($field->getDescription()) ?></td>
-                                <td class="center-block"><span class="badge"><?php echo ($field->isRequired()) ? 'YES' : 'NO' ?></td>
+                                <td class="center-block"><span class="badge"><?php echo ($field->isRequired()) ? 'YES' : 'NO' ?></span></td>
+                            </tr>
+                        <?php
+                        endforeach;
+                    elseif (!empty($generalFields)):
+                        foreach ($generalFields as $field): ?>
+                            <tr>
+                                <td><?php echo $this->escapeHtml($field->getName()) ?></td>
+                                <td><?php echo $this->escapeHtml($field->getType() ?: '') ?></td>
+                                <td><?php echo $this->escapeHtml($field->getDescription()) ?></td>
+                                <td class="center-block"><span class="badge"><?php echo ($field->isRequired()) ? 'YES' : 'NO' ?></span></td>
                             </tr>
                         <?php
                         endforeach;
