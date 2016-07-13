@@ -54,6 +54,16 @@ return array(
                     ),
                 ),
             ),
+            'test.rest.entity-fields' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/entity-fields',
+                    'defaults' => array(
+                        'controller' => 'Test\\V1\\Rest\\EntityFields\\Controller',
+                        'action' => 'test',
+                    ),
+                ),
+            ),
         ),
     ),
     'zf-versioning' => array(
@@ -139,6 +149,23 @@ return array(
             'collection_class' => 'Test\\V1\\Rest\\BooBaz\\BooBazCollection',
             'service_name' => 'BooBaz',
         ),
+        'Test\\V1\\Rest\\EntityFields\\Controller' => array(
+            'listener' => 'Test\\V1\\Rest\\EntityFields\\EntityFieldsResource',
+            'route_name' => 'test.rest.entity-fields',
+            'route_identifier_name' => 'id',
+            'collection_name' => 'entity_fields',
+            'entity_http_methods' => array(
+                0 => 'PUT',
+            ),
+            'collection_http_methods' => array(
+            ),
+            'collection_query_whitelist' => array(),
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => 'Test\\V1\\Rest\\EntityFields\\EntityFieldsEntity',
+            'collection_class' => 'Test\\V1\\Rest\\EntityFields\\EntityFieldsCollection',
+            'service_name' => 'EntityFields',
+        ),
     ),
     'zf-content-negotiation' => array(
         'controllers' => array(
@@ -174,6 +201,11 @@ return array(
                 1 => 'application/json',
                 2 => 'application/*+json',
             ),
+            'Test\\V1\\Rest\\EntityFields\\Controller' => array(
+                0 => 'application/vnd.test.v1+json',
+                1 => 'application/json',
+                2 => 'application/*+json',
+            ),
         ),
         'content_type_whitelist' => array(
             'Test\\V1\\Rest\\FooBar\\Controller' => array(
@@ -193,6 +225,10 @@ return array(
                 1 => 'application/json',
             ),
             'Test\\V1\\Rpc\\Ping\\Controller' => array(
+                0 => 'application/vnd.test.v1+json',
+                1 => 'application/json',
+            ),
+            'Test\\V1\\Rpc\\EntityFields\\Controller' => array(
                 0 => 'application/vnd.test.v1+json',
                 1 => 'application/json',
             ),
@@ -222,6 +258,12 @@ return array(
                 'entity_identifier_name' => 'id',
                 'route_name' => 'test.rest.boo-baz',
                 'route_identifier_name' => 'boo_baz_id',
+                'is_collection' => true,
+            ),
+            'Test\\V1\\Rest\\EntityFields\\EntityFieldsCollection' => array(
+                'entity_identifier_name' => 'id',
+                'route_name' => 'test.rest.entity-fields',
+                'route_identifier_name' => 'id',
                 'is_collection' => true,
             ),
         ),
@@ -254,6 +296,10 @@ return array(
         ),
         'Test\\V1\\Rest\\FooBarCollection\\Controller' => array(
             'input_filter' => 'Test\\V1\\Rest\\FooBarCollection\\Validator',
+        ),
+        'Test\\V1\\Rest\\EntityFields\\Controller' => array(
+            'input_filter' => 'Test\\V1\\Rest\\EntityFields\\Validator',
+            'PUT' => 'Test\\V1\\Rest\\EntityFields\\Validator\\Put',
         ),
     ),
     'input_filter_specs' => array(
@@ -341,6 +387,24 @@ return array(
                     'filters' => array(),
                     'validators' => array(),
                 ),
+            ),
+        ),
+        'Test\\V1\\Rest\\EntityFields\\Validator' => array(
+            0 => array(
+                'required' => true,
+                'validators' => array(),
+                'filters' => array(),
+                'name' => 'test',
+                'description' => 'test',
+            ),
+        ),
+        'Test\\V1\\Rest\\EntityFields\\Validator\\Put' => array(
+            0 => array(
+                'required' => true,
+                'validators' => array(),
+                'filters' => array(),
+                'name' => 'test_put',
+                'description' => 'test_put',
             ),
         ),
     ),

@@ -197,11 +197,10 @@ class ApiFactory
         }
 
         $fields = [];
-        if (isset($this->config['zf-content-validation'][$serviceClassName]['input_filter'])) {
-            $validatorName = $this->config['zf-content-validation'][$serviceClassName]['input_filter'];
-            if (isset($this->config['input_filter_specs'][$validatorName])) {
+        if (isset($this->config['zf-content-validation'][$serviceClassName])) {
+            foreach ($this->config['zf-content-validation'][$serviceClassName] as $validatorKey => $validatorName) {
                 foreach ($this->mapFields($this->config['input_filter_specs'][$validatorName]) as $fieldData) {
-                    $fields['input_filter'][] = $this->getField($fieldData);
+                    $fields[$validatorKey][] = $this->getField($fieldData);
                 }
                 $hasFields = true;
             }
@@ -215,21 +214,6 @@ class ApiFactory
         foreach ($baseOperationData as $httpMethod) {
             $op = new Operation();
             $op->setHttpMethod($httpMethod);
-
-            if (isset($this->config['zf-content-validation'][$serviceClassName][$httpMethod])) {
-                $validatorName = $this->config['zf-content-validation'][$serviceClassName][$httpMethod];
-                if (isset($this->config['input_filter_specs'][$validatorName])) {
-                    foreach ($this->config['input_filter_specs'][$validatorName] as $fieldData) {
-                        $fields[$httpMethod][] = $field = new Field();
-                        $field->setName($fieldData['name']);
-                        if (isset($fieldData['description'])) {
-                            $field->setDescription($fieldData['description']);
-                        }
-                        $field->setRequired($fieldData['required']);
-                    }
-                    $hasFields = true;
-                }
-            }
 
             if ($isRest) {
                 $description = isset($docsArray[$serviceClassName]['collection'][$httpMethod]['description'])
