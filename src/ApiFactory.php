@@ -107,6 +107,9 @@ class ApiFactory
             $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rpc']);
         }
 
+        // Sort services by name
+        ksort($serviceConfigs);
+
         foreach ($serviceConfigs as $serviceName => $serviceConfig) {
             if (strpos($serviceName, $apiName . '\\') === 0
                 && strpos($serviceName, '\V' . $api->getVersion() . '\\')

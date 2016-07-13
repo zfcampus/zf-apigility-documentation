@@ -25,6 +25,7 @@
     },
     "require": {
         "php": ">=5.5",
+        "michelf/php-markdown" : "^1.5",
         "zendframework/zend-modulemanager": "~2.3",
         "zendframework/zend-mvc": "~2.3",
         "zendframework/zend-servicemanager": "~2.3",

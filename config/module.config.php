@@ -55,10 +55,11 @@ return array(
     ),
     'view_helpers' => array(
         'invokables' => array(
-            'agacceptheaders'      => 'ZF\Apigility\Documentation\View\AgAcceptHeaders',
-            'agcontenttypeheaders' => 'ZF\Apigility\Documentation\View\AgContentTypeHeaders',
-            'agservicepath'        => 'ZF\Apigility\Documentation\View\AgServicePath',
-            'agstatuscodes'        => 'ZF\Apigility\Documentation\View\AgStatusCodes',
+            'agacceptheaders'         => 'ZF\Apigility\Documentation\View\AgAcceptHeaders',
+            'agcontenttypeheaders'    => 'ZF\Apigility\Documentation\View\AgContentTypeHeaders',
+            'agservicepath'           => 'ZF\Apigility\Documentation\View\AgServicePath',
+            'agstatuscodes'           => 'ZF\Apigility\Documentation\View\AgStatusCodes',
+            'agtransformdescription'  => 'ZF\Apigility\Documentation\View\AgTransformDescription',
         ),
     ),
     'view_manager' => array(

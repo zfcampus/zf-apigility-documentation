@@ -18,7 +18,7 @@ $collapseId        = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s%s', $serv
 
         <div class="panel-collapse collapse" id="<?php echo $collapseId ?>">
             <div class="panel-body">
-                <p class="text-muted"><?php echo $this->escapeHtml($operation->getDescription()) ?></p>
+                <p class="text-muted"><?php echo $this->agTransformDescription($operation->getDescription()) ?></p>
 
                 <?php if (! empty($generalFields) ||  ! empty($httpMethodFields)): ?>
                 <h4>Fields</h4>
@@ -38,7 +38,7 @@ $collapseId        = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s%s', $serv
                             <tr>
                                 <td><?php echo $this->escapeHtml($field->getName()) ?></td>
                                 <td><?php echo $this->escapeHtml($field->getType() ?: '') ?></td>
-                                <td><?php echo $this->escapeHtml($field->getDescription()) ?></td>
+                                <td><?php echo $this->escapeTransformDescription($field->getDescription()) ?></td>
                                 <td class="center-block"><span class="badge"><?php echo ($field->isRequired()) ? 'YES' : 'NO' ?></td>
                             </tr>
                         <?php
@@ -51,7 +51,7 @@ $collapseId        = $this->escapeHtmlAttr(sprintf('ops-collapse-%s-%s%s', $serv
                             <tr>
                                 <td><?php echo $this->escapeHtml($field->getName()) ?></td>
                                 <td><?php echo $this->escapeHtml($field->getType() ?: '') ?></td>
-                                <td><?php echo $this->escapeHtml($field->getDescription()) ?></td>
+                                <td><?php echo $this->agTransformDescription($field->getDescription()) ?></td>
                                 <td class="center-block"><span class="badge"><?php echo ($field->isRequired()) ? 'YES' : 'NO' ?></td>
                             </tr>
                         <?php
