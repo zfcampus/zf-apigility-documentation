@@ -148,7 +148,7 @@ class ApiFactoryTest extends TestCase
 
         $this->assertEquals('Test', $api->getName());
         $this->assertEquals(1, $api->getVersion());
-        $this->assertCount(5, $api->getServices());
+        $this->assertCount(6, $api->getServices());
     }
 
     public function testCreateRestService()
@@ -282,5 +282,16 @@ class ApiFactoryTest extends TestCase
                     break;
             }
         }
+    }
+
+    public function testGetFieldsForEntityMethods()
+    {
+        $api = $this->apiFactory->createApi('Test', 1);
+
+        $service = $this->apiFactory->createService($api, 'EntityFields');
+
+        $this->assertEquals('EntityFields', $service->getName());
+
+        $this->assertCount(1, $service->getFields('PUT'));
     }
 }
