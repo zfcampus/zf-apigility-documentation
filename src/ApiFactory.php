@@ -373,6 +373,15 @@ class ApiFactory
         $flatFields = [];
 
         foreach ($fields as $idx => $field) {
+            if (isset($field['type'])
+                && ($field['type'] === \Zend\InputFilter\CollectionInputFilter::class
+                    || is_subclass_of($field['type'], \Zend\InputFilter\CollectionInputFilter::class))
+                && isset($field['input_filter'])) {
+                $filteredFields = array_diff_key($field['input_filter'], ['type' => 0]);
+                $fullindex = $prefix ? sprintf('%s[]/%s', $prefix, $idx) : $idx . '[]';
+                $flatFields = array_merge($flatFields, $this->mapFields($filteredFields, $fullindex));
+                continue;
+            }
             if (isset($field['type']) && is_subclass_of($field['type'], 'Zend\InputFilter\InputFilterInterface')) {
                 $filteredFields = array_diff_key($field, ['type' => 0]);
                 $fullindex = $prefix ? sprintf('%s/%s', $prefix, $idx) : $idx;

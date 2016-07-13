@@ -75,6 +75,9 @@ return array(
         ),
         'description' => 'Some general notes about the FooBar rest service',
     ),
+    'Test\\V1\\Rest\\FooBarCollection\\Controller' => array(
+        'description' => 'Some general notes about the FooBarCollection rest service',
+    ),
     'Test\\V1\\Rpc\\Ping\\Controller' => array(
         'GET' => array(
             'description' => 'Ping the API to see uptime and network lag',
