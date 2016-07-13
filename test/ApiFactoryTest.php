@@ -7,7 +7,10 @@
 namespace ZFTest\Apigility\Documentation;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use Zend\ModuleManager\ModuleManager;
 use ZF\Apigility\Documentation\ApiFactory;
+use ZF\Apigility\Provider\ApigilityProviderInterface;
+use ZF\Configuration\ModuleUtils;
 
 class ApiFactoryTest extends TestCase
 {
@@ -61,9 +64,9 @@ class ApiFactoryTest extends TestCase
 
     public function setup()
     {
-        $mockModule = $this->getMock('ZF\Apigility\Provider\ApigilityProviderInterface');
+        $mockModule = $this->getMockBuilder(ApigilityProviderInterface::class)->getMock();
 
-        $moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
+        $moduleManager = $this->getMockBuilder(ModuleManager::class)
             ->disableOriginalConstructor()
             ->setMethods(['getModules', 'getModule'])
             ->getMock();
@@ -74,7 +77,7 @@ class ApiFactoryTest extends TestCase
             ->method('getModule')
             ->will($this->returnValue($mockModule));
 
-        $moduleUtils = $this->getMockBuilder('ZF\Configuration\ModuleUtils')
+        $moduleUtils = $this->getMockBuilder(ModuleUtils::class)
             ->disableOriginalConstructor()
             ->setMethods(['getModuleConfigPath'])
             ->getMock();
