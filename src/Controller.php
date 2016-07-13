@@ -24,6 +24,7 @@ class Controller extends AbstractActionController
 
     /**
      * @param ApiFactory $apiFactory
+     * @param ServerUrl $serverUrlViewHelper
      */
     public function __construct(ApiFactory $apiFactory, ServerUrl $serverUrlViewHelper)
     {
