@@ -70,12 +70,12 @@ class Controller extends AbstractActionController
         return $viewModel;
     }
 
-	/**
-	 * @param $name
-	 * @return mixed
-	 */
-	protected function normalizeApiName($name)
-	{
-		return str_replace('.', '\\', $name);
-	}
+    /**
+     * @param $name
+     * @return mixed
+     */
+    protected function normalizeApiName($name)
+    {
+        return str_replace('.', '\\', $name);
+    }
 }
