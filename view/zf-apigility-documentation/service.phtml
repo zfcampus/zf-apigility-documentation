@@ -14,7 +14,7 @@ $serviceCollapseId = $this->escapeHtmlAttr(sprintf('docs-collapse-%s', $service-
 
     <div class="panel-collapse collapse<?php echo ($this->embedded) ? '' : ' in' ?>" id="<?php echo $serviceCollapseId ?>">
         <div class="panel-body">
-            <p class="text-muted"><?php echo $this->escapeHtml($service->getDescription()) ?></p>
+            <p class="text-muted"><?php echo $this->agTransformDescription($service->getDescription()) ?></p>
         </div>
 
         <?php foreach ($service->getOperations() as $operation) {
