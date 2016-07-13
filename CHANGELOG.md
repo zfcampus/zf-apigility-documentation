@@ -14,6 +14,9 @@ All notable changes to this project will be documented in this file, in reverse 
   a new view helper, `agTransformDescription()`, which will transform markdown
   descriptions to HTML. This is now used by default in the supplied view
   scripts. **This means you can now use markdown in your API descriptions!**
+- [#38](https://github.com/zfcampus/zf-apigility-documentation/pull/38) updates
+  the `Field` class to allow setting the field type, and updates the operation
+  view script to now display field types for given operations.
 
 ### Deprecated
 
