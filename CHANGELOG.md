@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
+- [#43](https://github.com/zfcampus/zf-apigility-documentation/pull/43) adds
+  support for v3 releases of Zend Framework components, while retaining support
+  for v2 releases.
+- [#43](https://github.com/zfcampus/zf-apigility-documentation/pull/43) extracts
+  the `ApiFactory` factory inlined in the `Module` class to a first-class
+  factory, `ZF\Apigility\Documentation\Factory\ApiFactoryFactory`.
 - [#19](https://github.com/zfcampus/zf-apigility-documentation/pull/19) adds
   support for displaying documentation of APIs with nested namespaces (e.g.,
   `Company\ApiName` vs just `ApiName`). Such services are now denoted with
@@ -24,7 +30,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- [#43](https://github.com/zfcampus/zf-apigility-documentation/pull/43) removes
+  support for PHP 5.5.
 
 ### Fixed
 
