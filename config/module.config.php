@@ -4,67 +4,89 @@
  * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
-return array(
-    'router' => array(
-        'routes' => array(
-            'zf-apigility' => array(
-                'child_routes' => array(
-                    'documentation' => array(
-                        'type' => 'Zend\Mvc\Router\Http\Segment',
-                        'options' => array(
+namespace ZF\Apigility\Documentation;
+
+use Zend\ServiceManager\Factory\InvokableFactory;
+use Zend\View\Modle\ViewModel;
+
+return [
+    'router' => [
+        'routes' => [
+            'zf-apigility' => [
+                'child_routes' => [
+                    'documentation' => [
+                        'type' => 'segment',
+                        'options' => [
                             'route'    => '/documentation[/:api[-v:version][/:service]]',
-                            'constraints' => array(
+                            'constraints' => [
                                 'api' => '[a-zA-Z][a-zA-Z0-9_.]+',
-                            ),
-                            'defaults' => array(
-                                'controller' => 'ZF\Apigility\Documentation\Controller',
+                            ],
+                            'defaults' => [
+                                'controller' => Controller::class,
                                 'action'     => 'show',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    ),
-    'controllers' => array(
-        'factories' => array(
-            'ZF\Apigility\Documentation\Controller' => 'ZF\Apigility\Documentation\ControllerFactory',
-        ),
-    ),
-    'zf-content-negotiation' => array(
-        'controllers' => array(
-            'ZF\Apigility\Documentation\Controller' => 'Documentation',
-        ),
-        'accept_whitelist' => array(
-            'ZF\Apigility\Documentation\Controller' => array(
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'service_manager' => [
+        'factories' => [
+            ApiFactory::class => Factory\ApiFactoryFactory::class,
+        ],
+    ],
+    'controllers' => [
+        'factories' => [
+            Controller::class => ControllerFactory::class,
+        ],
+    ],
+    'zf-content-negotiation' => [
+        'controllers' => [
+            Controller::class => 'Documentation',
+        ],
+        'accept_whitelist' => [
+            Controller::class => [
                 0 => 'application/vnd.swagger+json',
                 1 => 'application/json',
-            ),
-        ),
-        'selectors' => array(
-            'Documentation' => array(
-                'Zend\View\Model\ViewModel' => array(
+            ],
+        ],
+        'selectors' => [
+            'Documentation' => [
+                ViewModel::class => [
                     'text/html',
                     'application/xhtml+xml',
-                ),
-                'ZF\Apigility\Documentation\JsonModel' => array(
+                ],
+                JsonModel::class => [
                     'application/json',
-                ),
-            ),
-        ),
-    ),
-    'view_helpers' => array(
-        'invokables' => array(
-            'agacceptheaders'         => 'ZF\Apigility\Documentation\View\AgAcceptHeaders',
-            'agcontenttypeheaders'    => 'ZF\Apigility\Documentation\View\AgContentTypeHeaders',
-            'agservicepath'           => 'ZF\Apigility\Documentation\View\AgServicePath',
-            'agstatuscodes'           => 'ZF\Apigility\Documentation\View\AgStatusCodes',
-            'agtransformdescription'  => 'ZF\Apigility\Documentation\View\AgTransformDescription',
-        ),
-    ),
-    'view_manager' => array(
-        'template_path_stack' => array(
+                ],
+            ],
+        ],
+    ],
+    'view_helpers' => [
+        'aliases' => [
+            'agacceptheaders'         => View\AgAcceptHeaders::class,
+            'agAcceptHeaders'         => View\AgAcceptHeaders::class,
+            'agcontenttypeheaders'    => View\AgContentTypeHeaders::class,
+            'agContentTypeHeaders'    => View\AgContentTypeHeaders::class,
+            'agservicepath'           => View\AgServicePath::class,
+            'agServicePath'           => View\AgServicePath::class,
+            'agstatuscodes'           => View\AgStatusCodes::class,
+            'agStatusCodes'           => View\AgStatusCodes::class,
+            'agtransformdescription'  => View\AgTransformDescription::class,
+            'agTransformDescription'  => View\AgTransformDescription::class,
+        ],
+        'factories' => [
+            View\AgAcceptHeaders::class        => InvokableFactory::class,
+            View\AgContentTypeHeaders::class   => InvokableFactory::class,
+            View\AgServicePath::class          => InvokableFactory::class,
+            View\AgStatusCodes::class          => InvokableFactory::class,
+            View\AgTransformDescription::class => InvokableFactory::class,
+        ],
+    ],
+    'view_manager' => [
+        'template_path_stack' => [
             __DIR__ . '/../view',
-        ),
-    ),
-);
+        ],
+    ],
+];

@@ -14,17 +14,4 @@ class Module
     {
         return include __DIR__ . '/../config/module.config.php';
     }
-
-    public function getServiceConfig()
-    {
-        return array('factories' => array(
-            ApiFactory::class => function ($services) {
-                return new ApiFactory(
-                    $services->get('ModuleManager'),
-                    $services->get('config'),
-                    $services->get(ModuleUtils::class)
-                );
-            }
-        ));
-    }
 }

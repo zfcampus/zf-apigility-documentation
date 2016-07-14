@@ -7,6 +7,8 @@
 namespace ZF\Apigility\Documentation;
 
 use Zend\ModuleManager\ModuleManager;
+use Zend\InputFilter\CollectionInputFilter;
+use Zend\InputFilter\InputFilterInterface;
 use ZF\Apigility\Provider\ApigilityProviderInterface;
 use ZF\Configuration\ModuleUtils as ConfigModuleUtils;
 
@@ -343,7 +345,7 @@ class ApiFactory
     private function mapFields(array $fields, $prefix = '')
     {
         if (isset($fields['name'])) {
-            /// detect usage of "name" as a field group name
+            // detect usage of "name" as a field group name
             if (is_array($fields['name']) && isset($fields['name']['name'])) {
                 return $this->mapFields($fields['name'], 'name');
             }
@@ -358,15 +360,19 @@ class ApiFactory
 
         foreach ($fields as $idx => $field) {
             if (isset($field['type'])
-                && ($field['type'] === \Zend\InputFilter\CollectionInputFilter::class
-                    || is_subclass_of($field['type'], \Zend\InputFilter\CollectionInputFilter::class))
-                && isset($field['input_filter'])) {
+                && ($field['type'] === CollectionInputFilter::class
+                    || is_subclass_of($field['type'], CollectionInputFilter::class))
+                && isset($field['input_filter'])
+            ) {
                 $filteredFields = array_diff_key($field['input_filter'], ['type' => 0]);
                 $fullindex = $prefix ? sprintf('%s[]/%s', $prefix, $idx) : $idx . '[]';
                 $flatFields = array_merge($flatFields, $this->mapFields($filteredFields, $fullindex));
                 continue;
             }
-            if (isset($field['type']) && is_subclass_of($field['type'], 'Zend\InputFilter\InputFilterInterface')) {
+
+            if (isset($field['type'])
+                && is_subclass_of($field['type'], InputFilterInterface::class)
+            ) {
                 $filteredFields = array_diff_key($field, ['type' => 0]);
                 $fullindex = $prefix ? sprintf('%s/%s', $prefix, $idx) : $idx;
                 $flatFields = array_merge($flatFields, $this->mapFields($filteredFields, $fullindex));

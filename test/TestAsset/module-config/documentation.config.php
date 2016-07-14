@@ -1,13 +1,13 @@
 <?php
 /**
  * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2014-2016 Zend Technologies USA Inc. (http://www.zend.com)
  */
 
-return array(
-    'Test\\V1\\Rest\\FooBar\\Controller' => array(
-        'collection' => array(
-            'GET' => array(
+return [
+    'Test\\V1\\Rest\\FooBar\\Controller' => [
+        'collection' => [
+            'GET' => [
                 'description' => 'Collection FooBar GET!',
                 'request' => null,
                 'response' => '{
@@ -42,48 +42,48 @@ return array(
        ]
    }
 }',
-            ),
-            'POST' => array(
+            ],
+            'POST' => [
                 'description' => null,
                 'request' => null,
                 'response' => null,
-            ),
+            ],
             'description' => 'Some general notes about he FooBar collections',
-        ),
-        'entity' => array(
-            'GET' => array(
+        ],
+        'entity' => [
+            'GET' => [
                 'description' => null,
                 'request' => null,
                 'response' => null,
-            ),
-            'PATCH' => array(
+            ],
+            'PATCH' => [
                 'description' => null,
                 'request' => null,
                 'response' => null,
-            ),
-            'PUT' => array(
+            ],
+            'PUT' => [
                 'description' => null,
                 'request' => null,
                 'response' => null,
-            ),
-            'DELETE' => array(
+            ],
+            'DELETE' => [
                 'description' => null,
                 'request' => null,
                 'response' => null,
-            ),
+            ],
             'description' => 'Some general notes about he FooBar entities',
-        ),
+        ],
         'description' => 'Some general notes about the FooBar rest service',
-    ),
-    'Test\\V1\\Rest\\FooBarCollection\\Controller' => array(
+    ],
+    'Test\\V1\\Rest\\FooBarCollection\\Controller' => [
         'description' => 'Some general notes about the FooBarCollection rest service',
-    ),
-    'Test\\V1\\Rpc\\Ping\\Controller' => array(
-        'GET' => array(
+    ],
+    'Test\\V1\\Rpc\\Ping\\Controller' => [
+        'GET' => [
             'description' => 'Ping the API to see uptime and network lag',
             'request' => null,
             'response' => '{"ack": 123456789}',
-        ),
+        ],
         'description' => 'Ping the API',
-    ),
-);
+    ],
+];
