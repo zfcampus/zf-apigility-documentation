@@ -7,7 +7,10 @@
 namespace ZFTest\Apigility\Documentation;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use Zend\ModuleManager\ModuleManager;
 use ZF\Apigility\Documentation\ApiFactory;
+use ZF\Apigility\Provider\ApigilityProviderInterface;
+use ZF\Configuration\ModuleUtils;
 
 class ApiFactoryTest extends TestCase
 {
@@ -61,31 +64,22 @@ class ApiFactoryTest extends TestCase
 
     public function setup()
     {
-        $mockModule = $this->getMock('ZF\Apigility\Provider\ApigilityProviderInterface');
+        $mockModule = $this->prophesize(ApigilityProviderInterface::class)->reveal();
 
-        $moduleManager = $this->getMockBuilder('Zend\ModuleManager\ModuleManager')
-            ->disableOriginalConstructor()
-            ->setMethods(['getModules', 'getModule'])
-            ->getMock();
-        $moduleManager->expects($this->any())
-            ->method('getModules')
-            ->will($this->returnValue(['Test']));
-        $moduleManager->expects($this->any())
-            ->method('getModule')
-            ->will($this->returnValue($mockModule));
+        $moduleManager = $this->prophesize(ModuleManager::class);
+        $moduleManager->getModules()->willReturn(['Test']);
+        $moduleManager->getModule('Test')->willReturn($mockModule);
 
-        $moduleUtils = $this->getMockBuilder('ZF\Configuration\ModuleUtils')
-            ->disableOriginalConstructor()
-            ->setMethods(['getModuleConfigPath'])
-            ->getMock();
-        $moduleUtils->expects($this->any())
-            ->method('getModuleConfigPath')
-            ->will($this->returnValue(__DIR__ . '/TestAsset/module-config/module.config.php'));
+        $moduleUtils = $this->prophesize(ModuleUtils::class);
+        $moduleUtils
+            ->getModuleConfigPath('Test')
+            ->willReturn(__DIR__ . '/TestAsset/module-config/module.config.php');
+
 
         $this->apiFactory = new ApiFactory(
-            $moduleManager,
+            $moduleManager->reveal(),
             include __DIR__ . '/TestAsset/module-config/module.config.php',
-            $moduleUtils
+            $moduleUtils->reveal()
         );
     }
 
@@ -287,11 +281,8 @@ class ApiFactoryTest extends TestCase
     public function testGetFieldsForEntityMethods()
     {
         $api = $this->apiFactory->createApi('Test', 1);
-
         $service = $this->apiFactory->createService($api, 'EntityFields');
-
         $this->assertEquals('EntityFields', $service->getName());
-
         $this->assertCount(1, $service->getFields('PUT'));
     }
 }
