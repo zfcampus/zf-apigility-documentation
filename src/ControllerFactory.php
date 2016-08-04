@@ -6,17 +6,36 @@
 
 namespace ZF\Apigility\Documentation;
 
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ControllerFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $controllers)
+    /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param null|array $options
+     * @return Controller
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $services = $controllers->getServiceLocator();
         return new Controller(
-            $services->get('ZF\Apigility\Documentation\ApiFactory'),
-            $services->get('ViewHelperManager')->get('ServerUrl')
+            $container->get(ApiFactory::class),
+            $container->get('ViewHelperManager')->get('ServerUrl')
         );
+    }
+
+    /**
+     * @param ServiceLocatorInterface $container
+     * @return Controller
+     */
+    public function createService(ServiceLocatorInterface $container)
+    {
+        if ($container instanceof AbstractPluginManager) {
+            $container = $container->getServiceLocator() ?: $container;
+        }
+        return $this($container, Controller::class);
     }
 }

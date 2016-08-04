@@ -20,7 +20,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 1.2.1 - TBD
+## 1.2.1 - 2016-08-04
 
 ### Added
 
@@ -36,7 +36,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#48](https://github.com/zfcampus/zf-apigility-documentation/pull/48) updates
+  the `ControllerFactory` implementation to be forwards compatible with
+  zend-servicemanager v3.
 
 ## 1.2.0 - 2016-07-14
 
