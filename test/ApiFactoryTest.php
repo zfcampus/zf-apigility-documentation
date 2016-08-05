@@ -9,6 +9,7 @@ namespace ZFTest\Apigility\Documentation;
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\ModuleManager\ModuleManager;
 use ZF\Apigility\Documentation\ApiFactory;
+use ZF\Apigility\Documentation\Service;
 use ZF\Apigility\Provider\ApigilityProviderInterface;
 use ZF\Configuration\ModuleUtils;
 
@@ -142,7 +143,7 @@ class ApiFactoryTest extends TestCase
 
         $this->assertEquals('Test', $api->getName());
         $this->assertEquals(1, $api->getVersion());
-        $this->assertCount(6, $api->getServices());
+        $this->assertCount(7, $api->getServices());
     }
 
     public function testCreateRestService()
@@ -235,6 +236,37 @@ class ApiFactoryTest extends TestCase
 
         $this->assertSame('FooBarCollection[]/FooBar', $fields[0]->getName());
         $this->assertSame('AnotherCollection[]/FooBar', $fields[1]->getName());
+    }
+
+    public function testCreateRestArtistsService()
+    {
+        $docConfig = include __DIR__ . '/TestAsset/module-config/documentation.config.php';
+
+        $api = $this->apiFactory->createApi('Test', 1);
+
+        $service = $this->apiFactory->createService($api, 'Bands');
+        self::assertInstanceOf(Service::class, $service);
+
+        self::assertEquals('Bands', $service->getName());
+        self::assertEquals(
+            $docConfig['Test\V1\Rest\Bands\Controller']['description'],
+            $service->getDescription()
+        );
+
+        $fields = $service->getFields('input_filter');
+        self::assertCount(11, $fields);
+
+        self::assertSame('name', $fields[0]->getName());
+        self::assertSame('artists[]/first_name', $fields[1]->getName());
+        self::assertSame('artists[]/last_name', $fields[2]->getName());
+        self::assertSame('debut_album/title', $fields[3]->getName());
+        self::assertSame('debut_album/release_date', $fields[4]->getName());
+        self::assertSame('debut_album/tracks[]/number', $fields[5]->getName());
+        self::assertSame('debut_album/tracks[]/title', $fields[6]->getName());
+        self::assertSame('albums[]/title', $fields[7]->getName());
+        self::assertSame('albums[]/release_date', $fields[8]->getName());
+        self::assertSame('albums[]/tracks[]/number', $fields[9]->getName());
+        self::assertSame('albums[]/tracks[]/title', $fields[10]->getName());
     }
 
     public function testCreateRpcService()

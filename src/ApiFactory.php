@@ -359,13 +359,12 @@ class ApiFactory
         $flatFields = [];
 
         foreach ($fields as $idx => $field) {
-            if (isset($field['type'])
+            if (isset($field['type'], $field['input_filter'])
                 && ($field['type'] === CollectionInputFilter::class
                     || is_subclass_of($field['type'], CollectionInputFilter::class))
-                && isset($field['input_filter'])
             ) {
                 $filteredFields = array_diff_key($field['input_filter'], ['type' => 0]);
-                $fullindex = $prefix ? sprintf('%s[]/%s', $prefix, $idx) : $idx . '[]';
+                $fullindex = $prefix ? sprintf('%s/%s[]', $prefix, $idx) : $idx . '[]';
                 $flatFields = array_merge($flatFields, $this->mapFields($filteredFields, $fullindex));
                 continue;
             }
