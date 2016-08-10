@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.2.2 - TBD
+## 1.2.2 - 2016-08-10
 
 ### Added
 
@@ -18,7 +18,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#53](https://github.com/zfcampus/zf-apigility-documentation/pull/53) fixes an
+  import statement in the configuration file.
 
 ## 1.2.1 - 2016-08-04
 
