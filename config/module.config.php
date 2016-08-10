@@ -7,7 +7,7 @@
 namespace ZF\Apigility\Documentation;
 
 use Zend\ServiceManager\Factory\InvokableFactory;
-use Zend\View\Modle\ViewModel;
+use Zend\View\Model\ViewModel;
 
 return [
     'router' => [
