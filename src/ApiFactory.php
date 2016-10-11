@@ -204,10 +204,12 @@ class ApiFactory
         $fields = [];
         if (isset($this->config['zf-content-validation'][$serviceClassName])) {
             foreach ($this->config['zf-content-validation'][$serviceClassName] as $validatorKey => $validatorName) {
-                foreach ($this->mapFields($this->config['input_filter_specs'][$validatorName]) as $fieldData) {
-                    $fields[$validatorKey][] = $this->getField($fieldData);
+                if (isset($this->config['input_filter_specs'][$validatorName])) {
+                    foreach ($this->mapFields($this->config['input_filter_specs'][$validatorName]) as $fieldData) {
+                        $fields[$validatorKey][] = $this->getField($fieldData);
+                    }
+                    $hasFields = true;
                 }
-                $hasFields = true;
             }
         }
 
