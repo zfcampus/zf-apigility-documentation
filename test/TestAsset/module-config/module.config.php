@@ -64,6 +64,15 @@ return [
                     ],
                 ],
             ],
+            'test.rest.bands' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/bands[/:band_id]',
+                    'defaults' => [
+                        'controller' => 'Test\\V1\\Rest\\Bands\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-versioning' => [
@@ -80,6 +89,7 @@ return [
             'Test\\V1\\Rest\\FooBar\\FooBarResource' => 'Test\\V1\\Rest\\FooBar\\FooBarResource',
             'Test\\V1\\Rest\\FooBarCollection\\FooBarResource' => 'Test\\V1\\Rest\\FooBarCollection\\FooBarResource',
             'Test\\V1\\Rest\\BooBaz\\BooBazResource' => 'Test\\V1\\Rest\\BooBaz\\BooBazResource',
+            'Test\\V1\\Rest\\Bands\\BandsResource' => 'Test\\V1\\Rest\\Bands\\BandsResource',
         ],
     ],
     'zf-rest' => [
@@ -166,6 +176,28 @@ return [
             'collection_class' => 'Test\\V1\\Rest\\EntityFields\\EntityFieldsCollection',
             'service_name' => 'EntityFields',
         ],
+        'Test\\V1\\Rest\\Bands\\Controller' => [
+            'listener' => 'Test\\V1\\Rest\\Bands\\BandsResource',
+            'route_name' => 'test.rest.bands',
+            'route_identifier_name' => 'artist_id',
+            'collection_name' => 'foo_bar',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => 'Test\\V1\\Rest\\Bands\\ArtistEntity',
+            'collection_class' => 'Test\\V1\\Rest\\Bands\\ArtistCollection',
+            'service_name' => 'Bands',
+        ],
     ],
     'zf-content-negotiation' => [
         'controllers' => [
@@ -174,6 +206,7 @@ return [
             'Test\\V1\\Rest\\BooBaz\\Controller' => 'HalJson',
             'Test\\V1\\Rpc\\MyRpc\\Controller' => 'Json',
             'Test\\V1\\Rpc\\Ping\\Controller' => 'Json',
+            'Test\\V1\\Rest\\Bands\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Test\\V1\\Rest\\FooBar\\Controller' => [
@@ -206,6 +239,11 @@ return [
                 1 => 'application/json',
                 2 => 'application/*+json',
             ],
+            'Test\\V1\\Rest\\Bands\\Controller' => [
+                0 => 'application/vnd.test.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'Test\\V1\\Rest\\FooBar\\Controller' => [
@@ -229,6 +267,10 @@ return [
                 1 => 'application/json',
             ],
             'Test\\V1\\Rpc\\EntityFields\\Controller' => [
+                0 => 'application/vnd.test.v1+json',
+                1 => 'application/json',
+            ],
+            'Test\\V1\\Rest\\Bands\\Controller' => [
                 0 => 'application/vnd.test.v1+json',
                 1 => 'application/json',
             ],
@@ -266,6 +308,12 @@ return [
                 'route_identifier_name' => 'id',
                 'is_collection' => true,
             ],
+            'Test\\V1\\Rest\\Bands\\ArtistEntity' => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'test.rest.bands',
+                'route_identifier_name' => 'artist_id',
+                'hydrator' => 'Zend\\Hydrator\\ArraySerializable',
+            ],
         ],
     ],
     'controllers' => [
@@ -300,6 +348,9 @@ return [
         'Test\\V1\\Rest\\EntityFields\\Controller' => [
             'input_filter' => 'Test\\V1\\Rest\\EntityFields\\Validator',
             'PUT' => 'Test\\V1\\Rest\\EntityFields\\Validator\\Put',
+        ],
+        'Test\\V1\\Rest\\Bands\\Controller' => [
+            'input_filter' => 'Test\\V1\\Rest\\Bands\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -405,6 +456,90 @@ return [
                 'filters' => [],
                 'name' => 'test_put',
                 'description' => 'test_put',
+            ],
+        ],
+        'Test\\V1\\Rest\\Bands\\Validator' => [
+            [
+                'name' => 'name',
+                'required' => true,
+                'description' => 'The name of the Band.',
+            ],
+            'artists' => [
+                'type' => Zend\InputFilter\CollectionInputFilter::class,
+                'input_filter' => [
+                    'type' => \Zend\InputFilter\InputFilter::class,
+                    'first_name' => [
+                        'name' => 'first_name',
+                        'required' => true,
+                        'description' => 'The Artist\'s first name.',
+                    ],
+                    'last_name' => [
+                        'name' => 'last_name',
+                        'required' => true,
+                        'description' => 'The Artist\'s last name.',
+                    ],
+                ],
+            ],
+            'debut_album' => [
+                'type' => \Zend\InputFilter\InputFilter::class,
+                'title' => [
+                    'name' => 'title',
+                    'required' => true,
+                    'description' => 'Album title.',
+                ],
+                'release_date' => [
+                    'name' => 'release_date',
+                    'required' => true,
+                    'description' => 'Album release date.',
+                ],
+                'tracks' => [
+                    'type' => Zend\InputFilter\CollectionInputFilter::class,
+                    'input_filter' => [
+                        'type' => \Zend\InputFilter\InputFilter::class,
+                        'number' => [
+                            'name' => 'number',
+                            'required' => true,
+                            'description' => 'Track number.',
+                        ],
+                        'title' => [
+                            'name' => 'title',
+                            'required' => true,
+                            'description' => 'Track title.',
+                        ],
+                    ],
+                ],
+            ],
+            'albums' => [
+                'type' => Zend\InputFilter\CollectionInputFilter::class,
+                'input_filter' => [
+                    'type' => \Zend\InputFilter\InputFilter::class,
+                    'title' => [
+                        'name' => 'title',
+                        'required' => true,
+                        'description' => 'Album title.',
+                    ],
+                    'release_date' => [
+                        'name' => 'release_date',
+                        'required' => true,
+                        'description' => 'Album release date.',
+                    ],
+                    'tracks' => [
+                        'type' => Zend\InputFilter\CollectionInputFilter::class,
+                        'input_filter' => [
+                            'type' => \Zend\InputFilter\InputFilter::class,
+                            'number' => [
+                                'name' => 'number',
+                                'required' => true,
+                                'description' => 'Track number.',
+                            ],
+                            'title' => [
+                                'name' => 'title',
+                                'required' => true,
+                                'description' => 'Track title.',
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],

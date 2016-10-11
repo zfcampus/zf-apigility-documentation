@@ -18,7 +18,26 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
+- [#49](https://github.com/zfcampus/zf-apigility-documentation/pull/49) fixes
+  representation of nested collections.
+
+## 1.2.2 - 2016-08-10
+
+### Added
+
 - Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#53](https://github.com/zfcampus/zf-apigility-documentation/pull/53) fixes an
 
 ## 1.2.2 - 2016-08-10
 
