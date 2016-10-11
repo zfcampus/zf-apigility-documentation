@@ -38,6 +38,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - [#49](https://github.com/zfcampus/zf-apigility-documentation/pull/49) fixes
   representation of nested collections.
+- [#50](https://github.com/zfcampus/zf-apigility-documentation/pull/50) fixes
+  escaping of field decriptions; previously, the template was improperly using
+  `escapeTransformDescription()` instead of `agTransformDescription()`.
 
 ## 1.2.2 - 2016-08-10
 
