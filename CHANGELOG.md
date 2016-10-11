@@ -20,7 +20,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 1.2.3 - TBD
+## 1.2.3 - 2016-10-11
 
 ### Added
 
@@ -41,6 +41,9 @@ All notable changes to this project will be documented in this file, in reverse 
 - [#50](https://github.com/zfcampus/zf-apigility-documentation/pull/50) fixes
   escaping of field decriptions; previously, the template was improperly using
   `escapeTransformDescription()` instead of `agTransformDescription()`.
+- [#52](https://github.com/zfcampus/zf-apigility-documentation/pull/52) fixes
+  output of fields when the `allows_only_fields_in_filter` parameter is present
+  for an input filter.
 
 ## 1.2.2 - 2016-08-10
 
