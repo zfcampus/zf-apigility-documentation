@@ -86,4 +86,7 @@ return [
         ],
         'description' => 'Ping the API',
     ],
+    'Test\\V1\\Rest\\Bands\\Controller' => [
+        'description' => 'A REST service about our favorite musical Bands.',
+    ],
 ];
