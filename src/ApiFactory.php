@@ -102,10 +102,10 @@ class ApiFactory
         $api->setName($apiName);
 
         $serviceConfigs = [];
-        if ($this->config['zf-rest']) {
+        if (isset($this->config['zf-rest']) && !empty($this->config['zf-rest'])) {
             $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rest']);
         }
-        if ($this->config['zf-rpc']) {
+        if (isset($this->config['zf-rpc']) && !empty($this->config['zf-rpc'])) {
             $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rpc']);
         }
 
