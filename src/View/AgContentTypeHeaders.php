@@ -20,7 +20,7 @@ class AgContentTypeHeaders extends AbstractHelper
     public function __invoke(Service $service)
     {
         $requestContentTypes = [];
-        if (!empty($service->getRequestContentTypes())) {
+        if (! empty($service->getRequestContentTypes())) {
             $requestContentTypes = $service->getRequestContentTypes();
         }
 

@@ -2,6 +2,7 @@
 
 namespace ZFTest\Apigility\Documentation;
 
+use PHPUnit\Framework\TestCase;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Helper\BasePath;
 use Zend\View\Helper\ServerUrl;
@@ -9,7 +10,7 @@ use Zend\View\Model\ModelInterface;
 use ZF\Apigility\Documentation\ApiFactory;
 use ZF\Apigility\Documentation\Controller;
 
-class ControllerTest extends \PHPUnit_Framework_TestCase
+class ControllerTest extends TestCase
 {
     /**
      * @var MvcEvent

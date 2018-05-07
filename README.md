@@ -1,10 +1,9 @@
-ZF Apigility Documentation
-==========================
+# ZF Apigility Documentation
 
-[![Build Status](https://travis-ci.org/zfcampus/zf-apigility-documentation.png)](https://travis-ci.org/zfcampus/zf-apigility-documentation)
+[![Build Status](https://secure.travis-ci.org/zfcampus/zf-apigility-documentation.svg?branch=master)](https://secure.travis-ci.org/zfcampus/zf-apigility-documentation)
+[![Coverage Status](https://coveralls.io/repos/github/zfcampus/zf-apigility-documentation/badge.svg?branch=master)](https://coveralls.io/github/zfcampus/zf-apigility-documentation?branch=master)
 
-Introduction
-------------
+## Introduction
 
 This Zend Framework module can be used with conjunction with Apigility in order to:
 
@@ -23,13 +22,11 @@ This module accomplishes all the above use cases by providing an endpoint to con
 (`/apigility/documentation[/:api[-v:version][/:service]]`), using content-negotiation to provide
 both HTML and JSON representations.
 
-Requirements
-------------
+## Requirements
   
 Please see the [composer.json](composer.json) file.
 
-Installation
-------------
+## Installation
 
 Run the following `composer` command:
 
@@ -66,8 +63,7 @@ return [
 > If you use [zf-component-installer](https://github.com/zendframework/zf-component-installer),
 > that plugin will install zf-apigility-documentation as a module for you.
 
-Configuration
-=============
+## Configuration
 
 ### User Configuration
 
@@ -167,13 +163,11 @@ return [
 ];
 ```
 
-ZF2 Events
-==========
+## ZF Events
 
 This module has no events or listeners.
 
-ZF2 Services
-============
+## ZF Services
 
 ### View Helpers
 

@@ -2,9 +2,11 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.3.0 - TBD
+## 1.3.0 - 2018-05-07
 
 ### Added
+
+- [#69](https://github.com/zfcampus/zf-apigility-documentation/pull/69) adds support for PHP 7.1 and 7.2.
 
 - [#59](https://github.com/zfcampus/zf-apigility-documentation/pull/59) adds the ability to specify examples for fields.
 
@@ -20,7 +22,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- [#69](https://github.com/zfcampus/zf-apigility-documentation/pull/69) removes support for HHVM.
 
 ### Fixed
 
@@ -33,6 +35,10 @@ All notable changes to this project will be documented in this file, in reverse 
 ## 1.2.3 - 2016-10-11
 
 ### Added
+
+- Nothing.
+
+### Changed
 
 - Nothing.
 

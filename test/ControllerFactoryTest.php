@@ -2,6 +2,7 @@
 
 namespace ZFTest\Apigility\Documentation;
 
+use PHPUnit\Framework\TestCase;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Helper\BasePath;
 use Zend\View\Helper\ServerUrl;
@@ -9,7 +10,7 @@ use ZF\Apigility\Documentation\ApiFactory;
 use ZF\Apigility\Documentation\Controller;
 use ZF\Apigility\Documentation\ControllerFactory;
 
-class ControllerFactoryTest extends \PHPUnit_Framework_TestCase
+class ControllerFactoryTest extends TestCase
 {
     public function testCreateController()
     {
