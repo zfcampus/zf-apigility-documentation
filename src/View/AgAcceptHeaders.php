@@ -19,10 +19,15 @@ class AgAcceptHeaders extends AbstractHelper
      */
     public function __invoke(Service $service)
     {
+        $requestAcceptTypes = $service->getRequestAcceptTypes();
+        if (empty($requestAcceptTypes)) {
+            $requestAcceptTypes = [];
+        }
+
         $view = $this->getView();
         $types = array_map(function ($type) use ($view) {
             return sprintf('<div class="list-group-item">%s</div>', $view->escapeHtml($type));
-        }, $service->getRequestAcceptTypes());
+        }, $requestAcceptTypes);
         return implode("\n", $types);
     }
 }
