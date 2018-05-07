@@ -8,23 +8,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-### Deprecated
+### Changed
 
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 1.2.4 - TBD
-
-### Added
-
-- Nothing.
+- [#62](https://github.com/zfcampus/zf-apigility-documentation/pull/62) updates the `ZF\Apigility\Documentation\Controller` to accept a `BasePath`
+  view helper as a construction aregument; this is then used to prefix any generated links with
+  the currently detected/configured base path to the application.
 
 ### Deprecated
 
