@@ -2,11 +2,19 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.2.4 - TBD
+## 1.3.0 - 2018-05-07
 
 ### Added
 
-- Nothing.
+- [#69](https://github.com/zfcampus/zf-apigility-documentation/pull/69) adds support for PHP 7.1 and 7.2.
+
+- [#59](https://github.com/zfcampus/zf-apigility-documentation/pull/59) adds the ability to specify examples for fields.
+
+### Changed
+
+- [#62](https://github.com/zfcampus/zf-apigility-documentation/pull/62) updates the `ZF\Apigility\Documentation\Controller` to accept a `BasePath`
+  view helper as a construction aregument; this is then used to prefix any generated links with
+  the currently detected/configured base path to the application.
 
 ### Deprecated
 
@@ -14,15 +22,23 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- [#69](https://github.com/zfcampus/zf-apigility-documentation/pull/69) removes support for HHVM.
 
 ### Fixed
 
-- Nothing.
+- [#59](https://github.com/zfcampus/zf-apigility-documentation/pull/59) provides a fix to configuration detection that removes an emitted
+  notice when no zf-rpc and/or no zf-rest configuration is present.
+
+- [#59](https://github.com/zfcampus/zf-apigility-documentation/pull/59) fixes the "api" route parameter constraint to accept `%` characters, which
+  are often present when multi-segment namespaces are used for a given API name.
 
 ## 1.2.3 - 2016-10-11
 
 ### Added
+
+- Nothing.
+
+### Changed
 
 - Nothing.
 

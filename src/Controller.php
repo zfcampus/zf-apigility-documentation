@@ -7,6 +7,7 @@
 namespace ZF\Apigility\Documentation;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Helper\BasePath;
 use Zend\View\Helper\ServerUrl;
 use ZF\ContentNegotiation\ViewModel;
 
@@ -23,13 +24,20 @@ class Controller extends AbstractActionController
     protected $serverUrlViewHelper;
 
     /**
+     * @var BasePath|null
+     */
+    private $basePath;
+
+    /**
      * @param ApiFactory $apiFactory
      * @param ServerUrl $serverUrlViewHelper
+     * @param BasePath $basePath
      */
-    public function __construct(ApiFactory $apiFactory, ServerUrl $serverUrlViewHelper)
+    public function __construct(ApiFactory $apiFactory, ServerUrl $serverUrlViewHelper, BasePath $basePath = null)
     {
         $this->apiFactory = $apiFactory;
         $this->serverUrlViewHelper = $serverUrlViewHelper;
+        $this->basePath = $basePath;
     }
 
     /**
@@ -42,15 +50,17 @@ class Controller extends AbstractActionController
      */
     public function showAction()
     {
+        $basePath = $this->basePath ? $this->basePath->__invoke() : null;
+
         $apiName = $this->normalizeApiName($this->params()->fromRoute('api'));
         $apiVersion = $this->params()->fromRoute('version', '1');
         $serviceName = $this->params()->fromRoute('service');
 
         $viewModel = new ViewModel();
         $viewModel->setTemplate('zf-apigility-documentation/show');
-        $viewModel->setVariable('baseUrl', $this->serverUrlViewHelper->__invoke());
+        $viewModel->setVariable('baseUrl', $this->serverUrlViewHelper->__invoke($basePath));
 
-        if (!$apiName) {
+        if (! $apiName) {
             $apiList = $this->apiFactory->createApiList();
             $viewModel->setVariable('apis', $apiList);
             $viewModel->setVariable('type', 'apiList');
@@ -59,7 +69,7 @@ class Controller extends AbstractActionController
 
         $api = $this->apiFactory->createApi($apiName, $apiVersion);
 
-        if (!$serviceName) {
+        if (! $serviceName) {
             $viewModel->setVariable('documentation', $api);
             $viewModel->setVariable('type', 'api');
             return $viewModel;

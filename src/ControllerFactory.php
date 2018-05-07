@@ -21,9 +21,12 @@ class ControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
+        $viewHelpers = $container->get('ViewHelperManager');
+
         return new Controller(
             $container->get(ApiFactory::class),
-            $container->get('ViewHelperManager')->get('ServerUrl')
+            $viewHelpers->get('ServerUrl'),
+            $viewHelpers->get('BasePath')
         );
     }
 

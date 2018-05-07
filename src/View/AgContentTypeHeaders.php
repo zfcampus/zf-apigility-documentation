@@ -19,10 +19,15 @@ class AgContentTypeHeaders extends AbstractHelper
      */
     public function __invoke(Service $service)
     {
+        $requestContentTypes = [];
+        if (! empty($service->getRequestContentTypes())) {
+            $requestContentTypes = $service->getRequestContentTypes();
+        }
+
         $view = $this->getView();
         $types = array_map(function ($type) use ($view) {
             return sprintf('<div class="list-group-item">%s</div>', $view->escapeHtml($type));
-        }, $service->getRequestContentTypes());
+        }, $requestContentTypes);
         return implode("\n", $types);
     }
 }

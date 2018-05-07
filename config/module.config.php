@@ -19,7 +19,7 @@ return [
                         'options' => [
                             'route'    => '/documentation[/:api[-v:version][/:service]]',
                             'constraints' => [
-                                'api' => '[a-zA-Z][a-zA-Z0-9_.]+',
+                                'api' => '[a-zA-Z][a-zA-Z0-9_.%]+',
                             ],
                             'defaults' => [
                                 'controller' => Controller::class,

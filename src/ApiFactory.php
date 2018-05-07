@@ -69,11 +69,11 @@ class ApiFactory
                 }
 
                 foreach ($serviceConfigs as $serviceName => $serviceConfig) {
-                    if (!preg_match($versionRegex, $serviceName, $matches)) {
+                    if (! preg_match($versionRegex, $serviceName, $matches)) {
                         continue;
                     }
                     $version = $matches['version'];
-                    if (!in_array($version, $versions)) {
+                    if (! in_array($version, $versions)) {
                         $versions[] = $version;
                     }
                 }
@@ -102,10 +102,10 @@ class ApiFactory
         $api->setName($apiName);
 
         $serviceConfigs = [];
-        if ($this->config['zf-rest']) {
+        if (! empty($this->config['zf-rest'])) {
             $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rest']);
         }
-        if ($this->config['zf-rpc']) {
+        if (! empty($this->config['zf-rpc'])) {
             $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rpc']);
         }
 
@@ -159,7 +159,7 @@ class ApiFactory
             }
         }
 
-        if (!$serviceData) {
+        if (! $serviceData) {
             foreach ($this->config['zf-rpc'] as $serviceClassName => $rpcConfig) {
                 if ((strpos($serviceClassName, $api->getName() . '\\') === 0)
                     && isset($rpcConfig['service_name'])
@@ -178,7 +178,7 @@ class ApiFactory
             }
         }
 
-        if (!$serviceData || !isset($serviceClassName)) {
+        if (! $serviceData || ! isset($serviceClassName)) {
             return false;
         }
 
@@ -405,6 +405,10 @@ class ApiFactory
 
         if (isset($fieldData['field_type'])) {
             $field->setFieldType($fieldData['field_type']);
+        }
+
+        if (isset($fieldData['example'])) {
+            $field->setExample($fieldData['example']);
         }
 
         $required = isset($fieldData['required']) ? (bool) $fieldData['required'] : false;
