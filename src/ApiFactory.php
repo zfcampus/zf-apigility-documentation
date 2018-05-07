@@ -102,10 +102,10 @@ class ApiFactory
         $api->setName($apiName);
 
         $serviceConfigs = [];
-        if ($this->config['zf-rest']) {
+        if (!empty($this->config['zf-rest'])) {
             $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rest']);
         }
-        if ($this->config['zf-rpc']) {
+        if (!empty($this->config['zf-rpc'])) {
             $serviceConfigs = array_merge($serviceConfigs, $this->config['zf-rpc']);
         }
 
@@ -405,6 +405,10 @@ class ApiFactory
 
         if (isset($fieldData['field_type'])) {
             $field->setFieldType($fieldData['field_type']);
+        }
+
+        if (isset($fieldData['example'])) {
+            $field->setExample($fieldData['example']);
         }
 
         $required = isset($fieldData['required']) ? (bool) $fieldData['required'] : false;

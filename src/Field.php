@@ -37,6 +37,11 @@ class Field implements IteratorAggregate
     protected $fieldType = '';
 
     /**
+     * @var string
+     */
+    protected $example;
+
+    /**
      * @param string $name
      */
     public function setName($name)
@@ -116,6 +121,18 @@ class Field implements IteratorAggregate
         $this->fieldType = $fieldType;
     }
 
+    public function getExample()
+    {
+        return $this->example;
+    }
+
+    public function setExample($example)
+    {
+        $this->example = $example;
+
+        return $this;
+    }
+
     /**
      * Cast object to array
      *
@@ -127,6 +144,7 @@ class Field implements IteratorAggregate
             'description' => $this->description,
             'required' => $this->required,
             'type' => $this->fieldType,
+            'example' => $this->example,
         ];
     }
 
