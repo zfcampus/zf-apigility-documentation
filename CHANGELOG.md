@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
+- [#69](https://github.com/zfcampus/zf-apigility-documentation/pull/69) adds support for PHP 7.1 and 7.2.
+
 - [#59](https://github.com/zfcampus/zf-apigility-documentation/pull/59) adds the ability to specify examples for fields.
 
 ### Changed
@@ -34,7 +36,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#69](https://github.com/zfcampus/zf-apigility-documentation/pull/69) adds support for PHP 7.1 and 7.2.
+- Nothing.
 
 ### Changed
 
