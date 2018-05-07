@@ -69,11 +69,11 @@ class ApiFactory
                 }
 
                 foreach ($serviceConfigs as $serviceName => $serviceConfig) {
-                    if (!preg_match($versionRegex, $serviceName, $matches)) {
+                    if (! preg_match($versionRegex, $serviceName, $matches)) {
                         continue;
                     }
                     $version = $matches['version'];
-                    if (!in_array($version, $versions)) {
+                    if (! in_array($version, $versions)) {
                         $versions[] = $version;
                     }
                 }
@@ -159,7 +159,7 @@ class ApiFactory
             }
         }
 
-        if (!$serviceData) {
+        if (! $serviceData) {
             foreach ($this->config['zf-rpc'] as $serviceClassName => $rpcConfig) {
                 if ((strpos($serviceClassName, $api->getName() . '\\') === 0)
                     && isset($rpcConfig['service_name'])
@@ -178,7 +178,7 @@ class ApiFactory
             }
         }
 
-        if (!$serviceData || !isset($serviceClassName)) {
+        if (! $serviceData || ! isset($serviceClassName)) {
             return false;
         }
 

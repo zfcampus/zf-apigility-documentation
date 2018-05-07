@@ -6,7 +6,7 @@
 
 namespace ZFTest\Apigility\Documentation;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\ModuleManager\ModuleManager;
 use ZF\Apigility\Documentation\ApiFactory;
 use ZF\Apigility\Documentation\Service;
@@ -63,7 +63,7 @@ class ApiFactoryTest extends TestCase
         ],
     ];
 
-    public function setup()
+    protected function setUp()
     {
         $mockModule = $this->prophesize(ApigilityProviderInterface::class)->reveal();
 
@@ -86,18 +86,18 @@ class ApiFactoryTest extends TestCase
 
     public function assertContainsStatusCodes($expectedCodes, $actualCodes, $message = '')
     {
-        if (!is_array($expectedCodes)) {
+        if (! is_array($expectedCodes)) {
             $expectedCodes = [$expectedCodes];
         }
 
         $expectedCodePairs = array_filter($this->expectedStatusCodes, function ($code) use ($expectedCodes) {
-            if (!is_array($code)) {
+            if (! is_array($code)) {
                 return false;
             }
-            if (!array_key_exists('code', $code)) {
+            if (! array_key_exists('code', $code)) {
                 return false;
             }
-            if (!in_array($code['code'], $expectedCodes)) {
+            if (! in_array($code['code'], $expectedCodes)) {
                 return false;
             }
 
@@ -112,7 +112,7 @@ class ApiFactoryTest extends TestCase
         }
 
         foreach ($expectedCodePairs as $code) {
-            if (!in_array($code, $actualCodes, true)) {
+            if (! in_array($code, $actualCodes, true)) {
                 $this->fail(sprintf(
                     "Failed to find code %s in actual codes:\n%s\n",
                     $code['code'],
