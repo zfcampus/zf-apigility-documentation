@@ -1,5 +1,9 @@
 # ZF Apigility Documentation
 
+> ## Repository abandoned 2019-12-31
+>
+> This repository has moved to laminas-api-tools/api-tools-documentation.
+
 [![Build Status](https://secure.travis-ci.org/zfcampus/zf-apigility-documentation.svg?branch=master)](https://secure.travis-ci.org/zfcampus/zf-apigility-documentation)
 [![Coverage Status](https://coveralls.io/repos/github/zfcampus/zf-apigility-documentation/badge.svg?branch=master)](https://coveralls.io/github/zfcampus/zf-apigility-documentation?branch=master)
 
